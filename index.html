@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 | Trao Gửi Yêu Thương</title>
+  <title>💐 Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 | Trao Gửi Yêu Thương 💖</title>
   
   <!-- Open Graph / SEO cho Zalo, Facebook Messenger khi chia sẻ link -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="💐 Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 💖">
-  <meta property="og:description" content="Một món quà tinh thần đặc biệt và những lời chúc yêu thương nhất dành riêng cho bạn nhân ngày 20/10!">
+  <meta property="og:description" content="Chúc những người phụ nữ thấy được tấm thiệp này luôn luôn xinh đẹp, hạnh phúc, được yêu thương và rạng rỡ mỗi ngày!">
   <meta property="og:image" content="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1200&auto=format&fit=crop">
   <meta name="theme-color" content="#ff5277">
 
@@ -23,23 +23,15 @@
   <!-- Hiệu ứng Canvas cánh hoa hồng & trái tim rơi -->
   <canvas id="petalCanvas" aria-hidden="true"></canvas>
 
-  <!-- Thanh thông báo đang xem trước dành cho người tạo thiệp -->
-  <div id="previewBanner" class="preview-banner hidden">
-    <div class="preview-banner-content">
-      <span>👁️ <strong>Chế độ xem trước thiệp:</strong> Bạn đang xem giao diện người nhận (<strong id="previewTargetName">Mẹ Kính Yêu</strong>). Người nhận mở link chỉ cần xem và cảm nhận, không hề có nút chọn vai trò!</span>
-      <button id="exitPreviewBtn" class="btn btn-sm btn-primary">✏️ Quay lại Bảng Tạo Link</button>
-    </div>
-  </div>
-
-  <!-- Modal 1: Chào Đón & Đính Kèm Ảnh Cho Người Nhận (Tùy Chọn) -->
+  <!-- Modal 1: Chào Đón & Đính Kèm Ảnh Kỷ Niệm (Tùy Chọn) -->
   <div id="welcomePhotoModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
     <div class="welcome-photo-backdrop"></div>
     <div class="welcome-photo-card glass-panel">
       <button id="closeWelcomeModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
-      <div class="welcome-badge">🌸 MÓN QUÀ 20/10 ĐẶC BIỆT 🌸</div>
-      <h3 class="welcome-title" id="welcomeTitle">Dành Riêng Cho <span id="welcomeRecipientName">Bạn</span>!</h3>
+      <div class="welcome-badge">🌸 MÓN QUÀ 20/10 DÀNH TẶNG BẠN 🌸</div>
+      <h3 class="welcome-title" id="welcomeTitle">Dành Tặng Người Phụ Nữ Tuyệt Vời!</h3>
       <p class="welcome-subtitle">
-        Có một bức thiệp yêu thương đang chờ bạn mở. Bạn có muốn đính kèm một bức ảnh xinh đẹp của mình lên bức thiệp này không?
+        Có một bức thiệp yêu thương đang chờ bạn mở. Bạn có muốn đính kèm một bức ảnh xinh đẹp của mình lên thiệp kỷ niệm này không?
       </p>
 
       <div class="photo-upload-slot" id="photoUploadSlot" tabindex="0">
@@ -60,10 +52,10 @@
           <span>✨ Dán Ảnh Này & Mở Thiệp</span>
         </button>
         <button id="skipWelcomePhotoBtn" class="btn btn-secondary">
-          <span>🌸 Mở Thiệp Ngay (Không Dùng Ảnh)</span>
+          <span>🌸 Mở Thiệp Ngay (Không Cần Ảnh)</span>
         </button>
       </div>
-      <p class="welcome-note">*(Bạn vẫn có thể thêm hoặc đổi ảnh bất cứ lúc nào khi xem thiệp)*</p>
+      <p class="welcome-note">*(Ảnh chỉ hiển thị trên máy của bạn và có thể đổi bất kỳ lúc nào)*</p>
     </div>
   </div>
 
@@ -73,14 +65,14 @@
     <div class="qr-modal-card glass-panel">
       <button id="closeQrModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
       <div class="qr-badge">📱 QUÉT MÃ MỞ THIỆP 20/10</div>
-      <h3 class="qr-modal-title" id="qrModalTitle">Mã QR Thiệp Chúc Mừng</h3>
+      <h3 class="qr-modal-title" id="qrModalTitle">Mã QR Thiệp Chúc Mừng 20/10</h3>
       <p class="qr-modal-desc" id="qrModalDesc">
-        Dùng Camera điện thoại hoặc Zalo quét mã để mở ngay thiệp chúc mừng riêng biệt:
+        Dùng Camera điện thoại hoặc Zalo quét mã để mở ngay thiệp chúc mừng yêu thương:
       </p>
       
       <div class="qr-code-frame">
         <div id="qrCodeContainer" class="qr-code-box"></div>
-        <div class="qr-target-tag" id="qrTargetTag">Gửi: Lan Anh ❤️</div>
+        <div class="qr-target-tag" id="qrTargetTag">💐 Chúc Mừng 20/10 Phụ Nữ Việt Nam 💖</div>
       </div>
 
       <div class="qr-actions">
@@ -88,7 +80,7 @@
           <span>⬇️ Tải Ảnh Mã QR (PNG)</span>
         </button>
         <button id="copyQrLinkBtn" class="btn btn-secondary btn-sm">
-          <span>📋 Sao Chép Link</span>
+          <span>📋 Sao Chép Link Web</span>
         </button>
       </div>
       <p class="qr-print-tip">
@@ -100,18 +92,18 @@
   <!-- Thanh điều khiển tiện ích trên cùng -->
   <header class="top-nav">
     <div class="brand-badge" id="brandBadge">
-      <span class="pulse-dot"></span> <span id="brandBadgeText">20 · 10 · VIETNAM WOMEN'S DAY</span>
+      <span class="pulse-dot"></span> <span id="brandBadgeText">20 · 10 · PHỤ NỮ VIỆT NAM</span>
     </div>
     <div class="nav-actions">
-      <button id="musicToggle" class="icon-btn" title="Bật/Tắt nhạc nền" aria-label="Bật/Tắt nhạc nền">
+      <button id="musicToggle" class="icon-btn" title="Bật/Tắt nhạc nền du dương" aria-label="Bật/Tắt nhạc nền">
         <span class="music-icon" id="musicIcon">🎵</span>
         <span class="music-text" id="musicLabel">Nhạc Nền</span>
         <span class="music-waves paused" id="musicWaves" aria-hidden="true">
           <span></span><span></span><span></span>
         </span>
       </button>
-      <button id="navActionBtn" class="icon-btn share-btn" title="Tạo thiệp gửi riêng" aria-label="Tạo thiệp gửi riêng">
-        <span id="navActionIcon">💌</span> <span id="navActionText">Tạo Link Gửi Riêng</span>
+      <button id="navShareBtn" class="icon-btn share-btn" title="Xem mã QR & Chia sẻ thiệp" aria-label="Xem mã QR & Chia sẻ">
+        <span>📱</span> <span>Mã QR & Chia Sẻ</span>
       </button>
     </div>
   </header>
@@ -119,264 +111,14 @@
   <main class="main-wrapper">
     <!-- Hero Banner -->
     <section class="hero-section">
-      <div class="hero-tag" id="heroTag">🌸 Trao Gửi Yêu Thương & Tri Ân Sâu Sắc 🌸</div>
+      <div class="hero-tag" id="heroTag">🌸 Trao Gửi Yêu Thương • 20/10 🌸</div>
       <h1 class="hero-title" id="heroTitle">
         Chúc Mừng Ngày <br>
         <span class="highlight-text">Phụ Nữ Việt Nam 20/10</span>
       </h1>
       <p class="hero-subtitle" id="heroSubtitle">
-        Cảm ơn những người phụ nữ tuyệt vời đã thắp sáng thế giới bằng tình yêu, sự dịu dàng và nét rạng ngời bất tận.
+        Chúc những người phụ nữ thấy được tấm thiệp này luôn luôn xinh đẹp, hạnh phúc, được yêu thương và rạng rỡ mỗi ngày!
       </p>
-    </section>
-
-    <!-- Bảng Điều Khiển: Tạo & Lấy Link Gửi Riêng Cho Từng Người (Ẩn trong chế độ người nhận) -->
-    <section id="senderHubSection" class="sender-hub-card glass-panel">
-      <div class="hub-header">
-        <span class="hub-badge">🎁 DÀNH CHO BẠN (NGƯỜI GỬI)</span>
-        <h2 class="section-title">Gửi Riêng Cho Từng Người Theo Vai Trò Khác Nhau</h2>
-        <p class="hub-desc">
-          Lấy đường link riêng hoặc tạo kèm tên người nhận. Người nhận khi bấm vào link 
-          <strong>chỉ cần mở thiệp, xem và cảm nhận</strong> — hoàn toàn không phải chọn role hay thiết lập gì!
-        </p>
-      </div>
-
-      <!-- Tab Chuyển Đổi: Gửi Nhanh 1 Chạm vs Cá Nhân Hóa Tên Riêng -->
-      <div class="hub-tabs" role="tablist">
-        <button id="tabQuickBtn" class="hub-tab-btn active" role="tab" aria-selected="true">
-          🚀 1. Lấy Link Nhanh Theo Vai Trò
-        </button>
-        <button id="tabCustomBtn" class="hub-tab-btn" role="tab" aria-selected="false">
-          💌 2. Tạo Link Kèm Tên Riêng
-        </button>
-      </div>
-
-      <!-- Tab 1: Danh Sách Link Gửi Nhanh (5 Vai Trò) -->
-      <div id="quickLinksPanel" class="tab-panel active">
-        <p class="panel-hint">👇 Chọn vai trò bên dưới để sao chép link hoặc copy trọn bộ lời nhắn Zalo gửi ngay:</p>
-        <div class="quick-roles-grid">
-          <!-- Mẹ -->
-          <div class="role-quick-card" data-role="mother">
-            <div class="card-role-header">
-              <span class="role-avatar">👩</span>
-              <div>
-                <h4>Mẹ Kính Yêu</h4>
-                <span class="role-desc">Tri ân & kính chúc sức khỏe</span>
-              </div>
-            </div>
-            <p class="sample-wish">"Kính chúc Mẹ luôn tràn đầy sức khỏe, bình an và mãi giữ nụ cười hiền hậu..."</p>
-            <div class="card-btn-group">
-              <button class="btn btn-primary btn-sm copy-role-link-btn" data-role="mother" title="Sao chép link gửi Mẹ">
-                📋 Sao Chép Link
-              </button>
-              <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="mother" title="Copy tin nhắn Zalo gửi Mẹ">
-                💬 Copy Tin Nhắn Zalo
-              </button>
-              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="mother" title="Xem & tải mã QR thiệp gửi Mẹ">
-                📱 Mã QR
-              </button>
-              <button class="btn btn-text btn-sm preview-role-btn" data-role="mother" title="Xem thử thiệp">
-                👁️ Xem Thử
-              </button>
-            </div>
-          </div>
-
-          <!-- Vợ / Người Yêu -->
-          <div class="role-quick-card" data-role="lover">
-            <div class="card-role-header">
-              <span class="role-avatar">💖</span>
-              <div>
-                <h4>Vợ / Người Yêu</h4>
-                <span class="role-desc">Ngọt ngào, yêu thương & lãng mạn</span>
-              </div>
-            </div>
-            <p class="sample-wish">"Chúc em yêu một ngày 20/10 ngọt ngào, rạng rỡ và tràn ngập niềm vui..."</p>
-            <div class="card-btn-group">
-              <button class="btn btn-primary btn-sm copy-role-link-btn" data-role="lover" title="Sao chép link gửi Người Yêu">
-                📋 Sao Chép Link
-              </button>
-              <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="lover" title="Copy tin nhắn Zalo gửi Người Yêu">
-                💬 Copy Tin Nhắn Zalo
-              </button>
-              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="lover" title="Xem & tải mã QR thiệp gửi Người Yêu">
-                📱 Mã QR
-              </button>
-              <button class="btn btn-text btn-sm preview-role-btn" data-role="lover" title="Xem thử thiệp">
-                👁️ Xem Thử
-              </button>
-            </div>
-          </div>
-
-          <!-- Chị / Em Gái -->
-          <div class="role-quick-card" data-role="sister">
-            <div class="card-role-header">
-              <span class="role-avatar">👧</span>
-              <div>
-                <h4>Chị / Em Gái</h4>
-                <span class="role-desc">Tươi vui, trẻ trung & đáng yêu</span>
-              </div>
-            </div>
-            <p class="sample-wish">"Chúc chị/em gái luôn tươi trẻ, xinh xắn, may mắn và nhận được thật nhiều quà..."</p>
-            <div class="card-btn-group">
-              <button class="btn btn-primary btn-sm copy-role-link-btn" data-role="sister" title="Sao chép link gửi Chị/Em">
-                📋 Sao Chép Link
-              </button>
-              <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="sister" title="Copy tin nhắn Zalo gửi Chị/Em">
-                💬 Copy Tin Nhắn Zalo
-              </button>
-              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="sister" title="Xem & tải mã QR thiệp gửi Chị/Em">
-                📱 Mã QR
-              </button>
-              <button class="btn btn-text btn-sm preview-role-btn" data-role="sister" title="Xem thử thiệp">
-                👁️ Xem Thử
-              </button>
-            </div>
-          </div>
-
-          <!-- Cô Giáo -->
-          <div class="role-quick-card" data-role="teacher">
-            <div class="card-role-header">
-              <span class="role-avatar">👩‍🏫</span>
-              <div>
-                <h4>Cô Giáo</h4>
-                <span class="role-desc">Tri ân người lái đò tri thức</span>
-              </div>
-            </div>
-            <p class="sample-wish">"Xin gửi lời tri ân sâu sắc nhất tới Cô, kính chúc Cô luôn dồi dào sức khỏe & nhiệt huyết..."</p>
-            <div class="card-btn-group">
-              <button class="btn btn-primary btn-sm copy-role-link-btn" data-role="teacher" title="Sao chép link gửi Cô Giáo">
-                📋 Sao Chép Link
-              </button>
-              <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="teacher" title="Copy tin nhắn Zalo gửi Cô Giáo">
-                💬 Copy Tin Nhắn Zalo
-              </button>
-              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="teacher" title="Xem & tải mã QR thiệp gửi Cô Giáo">
-                📱 Mã QR
-              </button>
-              <button class="btn btn-text btn-sm preview-role-btn" data-role="teacher" title="Xem thử thiệp">
-                👁️ Xem Thử
-              </button>
-            </div>
-          </div>
-
-          <!-- Bạn Bè / Đồng Nghiệp -->
-          <div class="role-quick-card" data-role="colleague">
-            <div class="card-role-header">
-              <span class="role-avatar">💼</span>
-              <div>
-                <h4>Bạn Bè / Đồng Nghiệp</h4>
-                <span class="role-desc">Rạng rỡ, năng động & thành công</span>
-              </div>
-            </div>
-            <p class="sample-wish">"Chúc phái đẹp luôn xinh đẹp, tự tin, KPI về đích sớm và tài chính rủng rỉnh..."</p>
-            <div class="card-btn-group">
-              <button class="btn btn-primary btn-sm copy-role-link-btn" data-role="colleague" title="Sao chép link gửi Đồng Nghiệp">
-                📋 Sao Chép Link
-              </button>
-              <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="colleague" title="Copy tin nhắn Zalo gửi Đồng Nghiệp">
-                💬 Copy Tin Nhắn Zalo
-              </button>
-              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="colleague" title="Xem & tải mã QR thiệp gửi Đồng Nghiệp">
-                📱 Mã QR
-              </button>
-              <button class="btn btn-text btn-sm preview-role-btn" data-role="colleague" title="Xem thử thiệp">
-                👁️ Xem Thử
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab 2: Tạo Link Cá Nhân Hóa Kèm Tên Riêng -->
-      <div id="customLinksPanel" class="tab-panel hidden">
-        <div class="custom-builder">
-          <div class="form-group">
-            <label class="form-label">1. Chọn vai trò của người nhận:</label>
-            <div class="role-selector" role="group" aria-label="Chọn đối tượng">
-              <button class="role-chip active" data-builder-role="mother">👩 Mẹ Kính Yêu</button>
-              <button class="role-chip" data-builder-role="lover">💖 Vợ / Người Yêu</button>
-              <button class="role-chip" data-builder-role="sister">👧 Chị / Em Gái</button>
-              <button class="role-chip" data-builder-role="teacher">👩‍🏫 Cô Giáo</button>
-              <button class="role-chip" data-builder-role="colleague">💼 Bạn Bè / Đồng Nghiệp</button>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group flex-1">
-              <label for="builderRecipientName" class="form-label">2. Tên người nhận (Hiển thị trên thiệp):</label>
-              <div class="input-wrapper">
-                <input type="text" id="builderRecipientName" placeholder="Ví dụ: Lan Anh, Mẹ Loan, Bé Thảo, Cô Mai..." maxlength="40">
-              </div>
-            </div>
-            <div class="form-group flex-1">
-              <label for="builderSenderName" class="form-label">3. Tên của bạn / Người gửi (Tùy chọn):</label>
-              <div class="input-wrapper">
-                <input type="text" id="builderSenderName" placeholder="Ví dụ: Con trai, Anh, Tuấn Hùng..." maxlength="40">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">4. Chọn mẫu lời chúc:</label>
-            <div class="wish-options-row">
-              <button class="wish-opt-btn active" data-wish-idx="0">Mẫu Lời Chúc 1</button>
-              <button class="wish-opt-btn" data-wish-idx="1">Mẫu Lời Chúc 2</button>
-              <button class="wish-opt-btn" data-wish-idx="2">Mẫu Lời Chúc 3</button>
-            </div>
-            <div class="wish-preview-snippet" id="builderWishPreview">
-              "Nhân ngày 20/10, con xin kính chúc Mẹ luôn tràn đầy sức khỏe, bình an và mãi giữ nụ cười hiền hậu trên môi..."
-            </div>
-          </div>
-
-          <!-- Kết quả Link sinh ra & Mã QR Trực Tiếp -->
-          <div class="generated-result-card">
-            <div class="result-header">
-              <span>🔗 Link Thiệp Riêng Biệt & Mã QR Trực Tiếp:</span>
-            </div>
-
-            <div class="result-flex-wrapper">
-              <div class="result-left-col">
-                <div class="result-input-group">
-                  <input type="text" id="generatedLinkInput" readonly value="" class="result-url-input">
-                  <button id="copyGeneratedLinkBtn" class="btn btn-primary btn-sm">
-                    📋 Sao Chép Link
-                  </button>
-                </div>
-
-                <!-- Khung xem trước tin nhắn Zalo kèm link -->
-                <div class="zalo-message-preview">
-                  <div class="zalo-preview-header">
-                    <span>💬 Lời nhắn Zalo / Messenger soạn sẵn:</span>
-                    <button id="copyZaloMsgBtn" class="btn-text">📋 Copy toàn bộ tin nhắn</button>
-                  </div>
-                  <div id="zaloMessageContent" class="zalo-message-text"></div>
-                </div>
-              </div>
-
-              <!-- Cột hiển thị Mã QR trực tiếp -->
-              <div class="result-qr-col">
-                <div class="builder-qr-card">
-                  <div id="builderQrCodeBox" class="builder-qr-box"></div>
-                  <span class="builder-qr-caption">📱 Quét QR bằng Zalo</span>
-                  <div class="builder-qr-btns">
-                    <button id="downloadBuilderQrBtn" class="btn btn-secondary btn-sm" title="Tải ảnh mã QR PNG">
-                      ⬇️ Tải QR
-                    </button>
-                    <button id="enlargeBuilderQrBtn" class="btn btn-text btn-sm" title="Phóng to mã QR">
-                      🔍 Xem To
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="builder-actions">
-              <button id="previewCustomCardBtn" class="btn btn-secondary">
-                👁️ Xem Thử Thiệp Như Người Nhận Sẽ Thấy
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- Khu vực Phong Thư Tương Tác (Interactive Envelope) -->
@@ -406,22 +148,22 @@
             <div class="letter-decor top-decor">❖ ── ✦ ── ❖</div>
             
             <header class="letter-header">
-              <span class="letter-badge">Gửi Người Phụ Nữ Tuyệt Vời Nhất</span>
-              <h3 class="recipient-greeting" id="recipientGreeting">Gửi: Mẹ Kính Yêu ❤️</h3>
+              <span class="letter-badge">Gửi Người Phụ Nữ Tuyệt Vời Nhất 🌸</span>
+              <h3 class="recipient-greeting" id="recipientGreeting">Gửi Những Người Phụ Nữ Thấy Được Tấm Thiệp Này ❤️</h3>
             </header>
 
             <div class="letter-body">
               <p id="wishContent" class="wish-text">
-                Nhân ngày 20/10, con xin kính chúc Mẹ luôn tràn đầy sức khỏe, bình an và mãi giữ nụ cười hạnh phúc trên môi. Cảm ơn Mẹ đã luôn là điểm tựa ấm áp nhất, che chở và dành cho chúng con tình yêu thương vô điều kiện!
+                Nhân ngày Phụ nữ Việt Nam 20/10, xin gửi ngàn lời chúc an lành, ngọt ngào và trân quý nhất tới bạn! Chúc những người phụ nữ thấy được tấm thiệp này luôn luôn xinh đẹp, hạnh phúc, được yêu thương và rạng rỡ mỗi ngày. Cảm ơn bạn vì đã luôn mang lại sự dịu dàng, nụ cười và biết bao điều tuyệt vời cho cuộc sống này!
               </p>
               <p class="quote-text" id="quoteContent">
-                "Thế giới có hàng triệu bông hoa, nhưng với con, Mẹ là đóa hoa ngát hương và cao quý nhất."
+                "Phụ nữ sinh ra là để được yêu thương, được trân trọng và được hạnh phúc trọn đời."
               </p>
             </div>
 
             <footer class="letter-footer">
               <div class="letter-signature">
-                <span>Với tất cả sự trân quý & yêu thương!</span>
+                <span id="letterSignature">Với tất cả sự trân quý & yêu thương!</span>
                 <span class="date-tag">20 tháng 10 năm 2026</span>
               </div>
             </footer>
@@ -522,7 +264,7 @@
           <div class="ornament-corner bottom-left"></div>
           <div class="ornament-corner bottom-right"></div>
           
-          <img id="photoDisplay" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=800&auto=format&fit=crop" alt="Bó hoa chúc mừng 20/10 tươi thắm">
+          <img id="photoDisplay" src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop" alt="Bó hoa chúc mừng 20/10 tươi thắm">
           
           <button id="recipientChangePhotoBtn" class="btn-change-photo-badge" title="Đổi hoặc thêm ảnh của bạn">
             📷 Đổi / Thêm Ảnh Của Bạn
@@ -534,48 +276,96 @@
         </div>
 
         <div class="frame-controls" id="frameControls">
-          <h3>🖼️ Thêm Ảnh Kỷ Niệm (Tùy Chọn)</h3>
-          <p>Bạn có thể tải lên ảnh của người bạn yêu quý để tạo thành trang kỷ niệm đặc biệt:</p>
+          <h3>🖼️ Ảnh Kỷ Niệm 20/10</h3>
+          <p>Bạn có thể tải lên một bức ảnh rạng rỡ của mình (hoặc người bạn yêu thương) để dán vào góc thiệp và khung kỷ niệm:</p>
           <label for="imageUploadInput" class="btn btn-secondary upload-label">
             <span>📷 Tải Lên Ảnh Của Bạn</span>
             <input type="file" id="imageUploadInput" accept="image/*" class="sr-only">
           </label>
-          <button id="resetPhotoBtn" class="btn-text">Đặt lại ảnh mặc định</button>
+          <button id="resetPhotoBtn" class="btn-text">Đặt lại ảnh hoa mặc định</button>
         </div>
       </div>
     </section>
 
-    <!-- Lời kết & Nút chia sẻ nhanh -->
+    <!-- Khu Vực: Chia Sẻ Thiệp & Mã QR (Gọn gàng, tinh tế, 100% Offline) -->
+    <section id="shareSection" class="share-hub-section glass-panel">
+      <div class="share-hub-header">
+        <span class="share-hub-badge">📱 CHIA SẺ & MÃ QR 20/10</span>
+        <h2 class="section-title">Trao Gửi Tấm Thiệp Này Đến Những Người Phụ Nữ Yêu Thương</h2>
+        <p class="share-hub-desc">
+          Sao chép link hoặc tải mã QR để in thiệp, dán lên bó hoa tươi, hộp quà tặng thật, hoặc chia sẻ lên Zalo/Facebook gửi tới những người phụ nữ tuyệt vời!
+        </p>
+      </div>
+
+      <div class="share-hub-grid">
+        <!-- Cột Trái: Link & Lời Nhắn Zalo & Ký Tên -->
+        <div class="share-left-col">
+          <!-- Nhập tên người gửi (Tùy chọn) -->
+          <div class="sender-input-box">
+            <label for="senderNameInput" class="share-label">✍️ Tên người gửi (Tùy chọn - để ký tên vào thiệp):</label>
+            <input type="text" id="senderNameInput" placeholder="Ví dụ: Con trai, Anh, Tuấn Hùng, Nhóm bạn thân..." maxlength="50">
+          </div>
+
+          <!-- Link Web trực tiếp -->
+          <div class="share-link-group">
+            <label class="share-label">🔗 Đường link thiệp chúc mừng:</label>
+            <div class="share-input-row">
+              <input type="text" id="shareLinkInput" readonly value="" class="share-url-input">
+              <button id="copyShareLinkBtn" class="btn btn-primary btn-sm">
+                📋 Sao Chép Link
+              </button>
+            </div>
+          </div>
+
+          <!-- Lời nhắn Zalo soạn sẵn -->
+          <div class="zalo-preview-box">
+            <div class="zalo-box-header">
+              <span>💬 Lời nhắn Zalo / Messenger soạn sẵn:</span>
+              <button id="copyZaloMsgBtn" class="btn-text">📋 Copy tin nhắn</button>
+            </div>
+            <div id="zaloMessageContent" class="zalo-box-content"></div>
+          </div>
+        </div>
+
+        <!-- Cột Phải: Mã QR Trực Tiếp -->
+        <div class="share-right-col">
+          <div class="qr-showcase-card">
+            <div id="shareQrCodeBox" class="share-qr-box"></div>
+            <span class="qr-showcase-tag">📱 Quét QR bằng Zalo / Camera</span>
+            <div class="qr-showcase-actions">
+              <button id="downloadShareQrBtn" class="btn btn-primary btn-sm" title="Tải ảnh mã QR PNG">
+                ⬇️ Tải Ảnh QR (PNG)
+              </button>
+              <button id="enlargeShareQrBtn" class="btn btn-secondary btn-sm" title="Phóng to mã QR">
+                🔍 Phóng To
+              </button>
+            </div>
+            <p class="qr-tip-text">
+              💡 <em>In mã QR này dán lên bó hoa hoặc hộp quà tặng thật sẽ tạo bất ngờ rất lớn!</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lời kết & Nút chia sẻ chân trang -->
     <footer class="page-footer">
       <p class="footer-blessing" id="footerBlessing">
         "Chúc tất cả phụ nữ Việt Nam luôn là những đóa hoa rạng rỡ nhất trần đời!" 🌷
       </p>
 
-      <!-- Nút dành cho Người Nhận (Chỉ xem & cảm nhận) -->
-      <div id="recipientFooterCta" class="recipient-footer-cta hidden">
-        <div class="footer-buttons" style="margin-bottom: 14px;">
-          <button id="recipientThankFooterBtn" class="btn btn-primary">
-            <span>💖 Gửi Lời Cảm Ơn Đến Người Tặng</span>
-          </button>
-          <button id="recipientFireworksBtn" class="btn btn-accent">
-            <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
-          </button>
-        </div>
-        <p class="recipient-prompt">🌸 Bạn có muốn tự tạo thiệp gửi tặng mẹ, người yêu hay bạn bè của mình?</p>
-        <button id="openCreatorBtn" class="btn btn-secondary btn-sm">
-          <span>✨ Bấm vào đây để tạo thiệp mới</span>
+      <div class="footer-buttons">
+        <button id="footerThankBtn" class="btn btn-primary">
+          <span>💖 Gửi Lời Cảm Ơn Đến Người Tặng</span>
+        </button>
+        <button id="footerFireworksBtn" class="btn btn-accent">
+          <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
+        </button>
+        <button id="footerShareBtn" class="btn btn-secondary">
+          <span>📱 Xem Mã QR & Link Chia Sẻ</span>
         </button>
       </div>
 
-      <!-- Nút dành cho Người Tạo / Người Gửi -->
-      <div class="footer-buttons" id="senderFooterButtons">
-        <button id="quickCopyWish" class="btn btn-primary">
-          <span>💌 Sao Chép Lời Chúc Gửi Zalo</span>
-        </button>
-        <button id="quickSharePage" class="btn btn-accent">
-          <span>🔗 Sao Chép Link Trang Web</span>
-        </button>
-      </div>
       <p class="copyright">
         Thiết kế bằng tất cả tình yêu thương nhân dịp 20/10 • Ngày Phụ Nữ Việt Nam
       </p>
@@ -593,4 +383,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

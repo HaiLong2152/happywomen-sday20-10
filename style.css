@@ -888,51 +888,21 @@ body {
 }
 
 /* ==========================================================================
-   SENDER HUB & RECIPIENT MODE STYLES
+   SHARE & QR HUB (CHIA SẺ & MÃ QR 100% OFFLINE)
    ========================================================================== */
-
-/* Preview Mode Banner for Sender */
-.preview-banner {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 200;
-  background: linear-gradient(135deg, #2b1118, #591024);
-  color: white;
-  padding: 10px 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid var(--accent-gold);
-}
-
-.preview-banner-content {
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 0.9rem;
-}
-
-.preview-banner-content strong {
-  color: #ffe066;
-}
-
-/* Sender Hub Card */
-.sender-hub-card {
+.share-hub-section {
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(255, 143, 163, 0.5);
-  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid rgba(255, 143, 163, 0.45);
+  background: rgba(255, 255, 255, 0.9);
 }
 
-.hub-header {
+.share-hub-header {
   text-align: center;
   margin-bottom: 24px;
 }
 
-.hub-badge {
+.share-hub-badge {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 700;
@@ -945,245 +915,76 @@ body {
   box-shadow: 0 2px 8px rgba(255, 77, 109, 0.3);
 }
 
-.hub-desc {
+.share-hub-desc {
   font-size: 0.95rem;
   color: var(--muted-text);
   max-width: 680px;
   margin: 0 auto;
 }
 
-.hub-desc strong {
-  color: var(--deep-rose);
-}
-
-/* Tab Switcher */
-.hub-tabs {
+.share-hub-grid {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 26px;
-  flex-wrap: wrap;
+  gap: 24px;
+  align-items: stretch;
 }
 
-.hub-tab-btn {
-  background: white;
-  border: 1.5px solid var(--soft-rose);
-  color: var(--dark-text);
-  padding: 11px 22px;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.hub-tab-btn:hover {
-  background: var(--light-blush);
-  border-color: var(--primary-pink);
-}
-
-.hub-tab-btn.active {
-  background: linear-gradient(135deg, var(--deep-rose), var(--primary-pink));
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 16px rgba(201, 24, 74, 0.35);
-}
-
-.tab-panel {
-  display: block;
-}
-
-.tab-panel.hidden {
-  display: none !important;
-}
-
-.panel-hint {
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--deep-rose);
-  margin-bottom: 18px;
-}
-
-/* Quick Roles Grid */
-.quick-roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.share-left-col {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-.role-quick-card {
-  background: white;
-  border: 1.5px solid rgba(255, 143, 163, 0.4);
-  border-radius: 18px;
-  padding: 18px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-  transition: var(--transition-smooth);
-}
-
-.role-quick-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary-pink);
-  box-shadow: 0 10px 24px rgba(255, 77, 109, 0.18);
-}
-
-.card-role-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.role-avatar {
-  font-size: 2rem;
-  line-height: 1;
-  background: var(--light-blush);
-  padding: 8px;
-  border-radius: 12px;
-}
-
-.card-role-header h4 {
-  font-size: 1.05rem;
-  color: var(--deep-rose);
-  font-weight: 700;
-}
-
-.role-desc {
-  font-size: 0.78rem;
-  color: var(--muted-text);
+.share-label {
   display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--deep-rose);
+  margin-bottom: 6px;
 }
 
-.sample-wish {
-  font-size: 0.84rem;
-  color: #4a383d;
-  font-style: italic;
-  line-height: 1.5;
-  margin-bottom: 16px;
-  background: #fff8f9;
-  padding: 10px 12px;
+.sender-input-box input {
+  width: 100%;
+  padding: 10px 16px;
   border-radius: 10px;
-  border-left: 3px solid var(--soft-rose);
-}
-
-.card-btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Custom Builder Form */
-.custom-builder {
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  display: block;
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--deep-rose);
-  margin-bottom: 8px;
-}
-
-.form-row {
-  display: flex;
-  gap: 14px;
-}
-
-.flex-1 {
-  flex: 1;
-}
-
-.wish-options-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.wish-opt-btn {
+  border: 1.5px solid var(--soft-rose);
   background: white;
-  border: 1px solid var(--soft-rose);
+  font-size: 0.92rem;
+  font-family: inherit;
   color: var(--dark-text);
-  padding: 7px 14px;
-  border-radius: 999px;
-  font-size: 0.84rem;
-  font-weight: 600;
-  cursor: pointer;
+  outline: none;
   transition: var(--transition-smooth);
 }
 
-.wish-opt-btn:hover {
-  background: var(--light-blush);
+.sender-input-box input:focus {
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
 }
 
-.wish-opt-btn.active {
-  background: var(--deep-rose);
-  color: white;
-  border-color: var(--deep-rose);
-}
-
-.wish-preview-snippet {
-  font-size: 0.88rem;
-  font-style: italic;
-  color: #3b232a;
-  background: #fff8f9;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border-left: 3px solid var(--primary-pink);
-  line-height: 1.6;
-}
-
-/* Generated Result Card */
-.generated-result-card {
-  margin-top: 24px;
-  padding: 20px;
-  background: #fff8fa;
-  border: 1.5px dashed var(--primary-pink);
-  border-radius: 16px;
-}
-
-.result-header {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--deep-rose);
-  margin-bottom: 10px;
-}
-
-.result-input-group {
+.share-input-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
 }
 
-.result-url-input {
+.share-url-input {
   flex: 1;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid var(--soft-rose);
+  border: 1.5px solid var(--soft-rose);
   background: white;
   font-size: 0.88rem;
   color: var(--dark-text);
   font-family: monospace;
 }
 
-.zalo-message-preview {
+.zalo-preview-box {
   background: white;
-  border: 1px solid rgba(255, 143, 163, 0.4);
-  border-radius: 12px;
+  border: 1.5px solid rgba(255, 143, 163, 0.4);
+  border-radius: 14px;
   padding: 14px;
-  margin-bottom: 16px;
 }
 
-.zalo-preview-header {
+.zalo-box-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1193,39 +994,78 @@ body {
   color: var(--muted-text);
 }
 
-.zalo-message-text {
+.zalo-box-content {
   font-size: 0.86rem;
   color: #2b1118;
   white-space: pre-line;
   line-height: 1.6;
   background: #f7f9fa;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #e1e8ed;
 }
 
-.builder-actions {
+.share-right-col {
+  flex: 1;
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  align-items: center;
 }
 
-/* Recipient Footer CTA */
-.recipient-footer-cta {
-  margin-top: 24px;
-  margin-bottom: 16px;
-  padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 143, 163, 0.4);
+.qr-showcase-card {
+  background: white;
+  border: 1.5px solid var(--soft-rose);
+  border-radius: 18px;
+  padding: 20px 16px;
   text-align: center;
+  box-shadow: 0 6px 20px rgba(255, 77, 109, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
 }
 
-.recipient-prompt {
-  font-size: 0.92rem;
-  color: var(--muted-text);
-  margin-bottom: 10px;
+.share-qr-box {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 10px;
 }
+
+.share-qr-box canvas,
+.share-qr-box img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.qr-showcase-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--deep-rose);
+  background: var(--light-blush);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.qr-showcase-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.qr-tip-text {
+  font-size: 0.78rem;
+  color: var(--muted-text);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
 
 /* ==========================================================================
    LIVE QR CODE, WELCOME PHOTO MODAL & POSTAGE STAMP
@@ -1692,42 +1532,17 @@ body {
     height: 175px;
   }
 
-  .preview-banner-content {
+  .share-hub-grid {
     flex-direction: column;
-    text-align: center;
-    gap: 8px;
+    gap: 20px;
   }
 
-  .hub-tabs {
+  .share-right-col {
+    margin-top: 10px;
+  }
+
+  .share-input-row {
     flex-direction: column;
-  }
-
-  .hub-tab-btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .result-input-group {
-    flex-direction: column;
-  }
-
-  .quick-roles-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .result-flex-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .result-qr-col {
-    margin-top: 14px;
-    align-self: center;
   }
 
   .letter-stamp {

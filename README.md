@@ -1,25 +1,44 @@
 # 💐 Web Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10
 
-Trang web thiệp chúc mừng tương tác 20/10 đẹp mắt, lãng mạn và hiện đại, thiết kế hoàn hảo cho cả điện thoại (Zalo / Messenger) và máy tính.
+Trang web thiệp chúc mừng tương tác 20/10 đẹp mắt, lãng mạn và hiện đại, mang thông điệp yêu thương chung gửi tới **những người phụ nữ thấy được tấm thiệp này**. Thiết kế tối ưu hoàn hảo cho cả điện thoại (Zalo / Messenger) và máy tính.
 
 ---
 
 ## ✨ Các Tính Năng Nổi Bật
 
-1. **Phong Thư Tương Tác 3D (Interactive Wax Seal Envelope):** Chạm vào con dấu sáp đỏ để mở bung nắp thiệp, bắn pháo hoa giấy và hé lộ bức tâm thư ấm áp.
-2. **Cá Nhân Hóa Tên & Đối Tượng (Role Switcher):** 
-   - Lựa chọn sẵn: **Mẹ Yêu, Vợ / Người Yêu, Chị / Em Gái, Cô Giáo, Bạn Bè / Đồng Nghiệp**.
-   - Ô nhập tên riêng tùy ý (VD: *Lan Anh, Thu Hà, Mẹ yêu...*).
-3. **Tạo Link Riêng Biệt Gửi Zalo / Messenger (`?to=Tên&role=lover`):**
-   - Tự động sinh link kèm tham số URL. Người nhận khi bấm vào link sẽ thấy ngay tên của mình và thiệp tự động mở!
-4. **Nhạc Nền Hộp Nhạc Tự Động (Web Audio API Synthesizer):**
-   - Tích hợp sẵn bộ tổng hợp âm thanh nốt chuông lãng mạn nhẹ nhàng, **không phụ thuộc file MP3 ngoài**, chạy mượt 100% không lo lỗi link âm thanh.
-5. **Hiệu Ứng Rơi Cánh Hoa & Trái Tim (HTML5 Canvas 60 FPS):**
+1. **Thông Điệp Yêu Thương Chung Ý Nghĩa & Sâu Sắc:**
+   - *"Chúc những người phụ nữ thấy được tấm thiệp này luôn luôn xinh đẹp, hạnh phúc, được yêu thương và rạng rỡ mỗi ngày!"*
+   - Tôn vinh mọi người phụ nữ (Mẹ, Vợ, Người yêu, Chị/Em gái, Cô giáo, Bạn bè, Đồng nghiệp) một cách trọn vẹn, không cần phân tách vai trò phức tạp.
+   - Nút **[🔄 Đổi Lời Chúc Khác]** cho phép chuyển đổi linh hoạt qua 5 mẫu lời chúc sâu lắng.
+
+2. **Phong Thư Tương Tác 3D (Interactive Wax Seal Envelope):**
+   - Chạm vào con dấu sáp đỏ `[🌹 MỞ THIỆP]` để mở nắp phong bì, bung pháo hoa, hé lộ bức tâm thư và tự động ngân vang giai điệu nhẹ nhàng.
+   - Hiệu ứng chữ gõ tay từng dòng (**Typewriter Effect**) tạo cảm giác nắn nót chân thành.
+
+3. **Hộp Thoại Chào Đón & Đính Kèm Ảnh Kỷ Niệm (Tùy Chọn):**
+   - Khi vào web, người nhận có thể chọn **tải ảnh kỷ niệm/nụ cười rạng rỡ** của mình lên.
+   - Ảnh được lồng vào **con tem bưu chính cổ điển** ở góc bức thư và đồng bộ vào **khung ảnh kỷ niệm**.
+   - Có thể chọn **"Mở Thiệp Ngay"** để thưởng thức thiệp với con tem hoa hồng mặc định mà không cần tải ảnh.
+
+4. **Mã QR 100% Offline & Chia Sẻ Nhanh:**
+   - Tích hợp sẵn khung mã QR tự động sinh bằng `qrcode.min.js`, không gửi dữ liệu ra ngoài.
+   - Nút **[⬇️ Tải Ảnh QR (PNG)]** để lưu ảnh mã QR sắc nét về máy, dễ dàng in kẹp vào bó hoa tươi, dán lên hộp quà thật hoặc gửi qua Zalo/Facebook.
+   - Nút **[💬 Copy Tin Nhắn Zalo]** soạn sẵn tin nhắn chúc mừng dễ thương kèm đường link.
+   - Ô nhập **Tên người gửi (tùy chọn)** để ký tên dưới bức thiệp (`?from=...`).
+
+5. **Nhạc Nền Hộp Nhạc Du Dương (Web Audio API Synthesizer):**
+   - Tích hợp bộ tổng hợp âm thanh nốt chuông lãng mạn, **100% offline không phụ thuộc file MP3 ngoài**, không lo lỗi link âm thanh hay bản quyền.
+   - Tự động kích hoạt khi chạm mở con dấu sáp đỏ.
+
+6. **Hiệu Ứng Rơi Cánh Hoa Hồng & Trái Tim (HTML5 Canvas 60 FPS):**
    - Cánh hoa hồng, trái tim và bụi sao lấp lánh rơi uyển chuyển.
-   - Chạm/click bất kỳ đâu trên màn hình để tỏa ra những chùm trái tim & ngôi sao lấp lánh.
-6. **Rút Quẻ May Mắn 20/10 (Interactive Flip Cards):**
+   - Chạm bất kỳ đâu trên màn hình để tỏa ra những chùm hoa và trái tim bay bổng.
+
+7. **Rút Quẻ May Mắn 20/10 (Interactive Flip Cards):**
    - 4 Hộp quà may mắn bí ẩn (Sắc đẹp, Hạnh phúc, Thành công, Bình an).
-7. **Khung Ảnh Kỷ Niệm Tùy Chọn:** Cho phép tải ảnh cá nhân lên trực tiếp để chụp ảnh màn hình hoặc gửi tặng.
+
+8. **Nút 1-Chạm Gửi Lời Cảm Ơn Đến Người Tặng:**
+   - Người nhận bấm 1 chạm là tự động sao chép lời cảm kích ngọt ngào để gửi lại cho người tặng qua Zalo/Messenger.
 
 ---
 
@@ -72,56 +91,8 @@ Nếu máy bạn đã có Node.js:
 
 ---
 
-## 🎁 Hướng Dẫn Gửi Thiệp Cho Từng Người (Chế Độ Người Nhận Riêng Biệt)
+## 💌 Hướng Dẫn Sử Dụng & Chia Sẻ Thiệp
 
-Hệ thống được thiết kế thông minh với 2 chế độ:
-
-### 1. Dành cho người nhận (Chỉ xem & cảm nhận - Không chọn role):
-Khi người nhận bấm vào link bạn gửi (có chứa tham số `?role=...` hoặc `?to=...`):
-- **Hoàn toàn ẩn bộ chọn vai trò**: Người nhận không hề thấy các nút chọn Mẹ, Vợ, Cô giáo... hay ô nhập tên.
-- **Trải nghiệm cá nhân hóa 100%**:
-  - Tiêu đề thiệp gửi đúng tên/đối tượng (VD: *Gửi: Mẹ Kính Yêu ❤️* hoặc *Gửi: Lan Anh 💖*).
-  - Chạm vào con dấu sáp đỏ để mở thiệp: phát giai điệu lãng mạn, bung pháo hoa và cánh hoa rơi.
-  - Lời chúc và trích dẫn chuẩn mực theo đúng mối quan hệ.
-  - Rút quẻ thông điệp may mắn 20/10.
-  - Bắn pháo hoa kỷ niệm và bật nhạc nền.
-
----
-
-### 2. Dành cho bạn (Người gửi - Trung tâm tạo & điều phối link):
-Khi bạn mở trang web gốc (không có tham số):
-- **Cách 1 - Lấy link nhanh theo vai trò (1 chạm):**
-  - 👩 **Mẹ Kính Yêu**: `?role=mother`
-  - 💖 **Vợ / Người Yêu**: `?role=lover`
-  - 👧 **Chị / Em Gái**: `?role=sister`
-  - 👩‍🏫 **Cô Giáo**: `?role=teacher`
-  - 💼 **Bạn Bè / Đồng Nghiệp**: `?role=colleague`
-  - Mỗi thẻ có sẵn nút **[📋 Sao Chép Link]**, nút **[💬 Copy Tin Nhắn Zalo]** (đã soạn sẵn lời chúc lịch sự kèm link) và nút **[👁️ Xem Thử]**.
-
-- **Cách 2 - Tạo link kèm tên riêng:**
-  - Chọn vai trò -> Nhập tên người nhận (VD: *Lan Anh, Mẹ Loan, Em Thảo...*) -> Chọn mẫu lời chúc.
-  - Hệ thống tự sinh link: `?role=lover&to=Lan+Anh` kèm mẫu tin nhắn Zalo gửi ngay.
-  - Có nút **[👁️ Xem Thử Thiệp Như Người Nhận Sẽ Thấy]** để bạn kiểm tra trước khi gửi.
-
-- **Cách 3 - Mã QR 100% Offline (Quét Zalo / In thiệp & dán hộp quà):**
-  - Cả 5 vai trò nhanh và bộ tạo link tùy chỉnh đều tích hợp nút **[📱 Mã QR]** / khung QR trực quan.
-  - Bấm **[⬇️ Tải Ảnh QR (PNG)]** để lưu ảnh mã QR sắc nét về máy, dễ dàng in ra giấy kẹp vào bó hoa, dán hộp quà hoặc gửi qua Zalo/Facebook.
-  - Hoạt động hoàn toàn offline nhờ thư viện `qrcode.min.js`, không gửi dữ liệu ra ngoài, bảo mật và tốc độ tức thì.
-
----
-
-## 💌 Trải Nghiệm Mở Thiệp Đỉnh Cao Cho Người Nhận
-
-Khi người nhận mở link (hoặc quét mã QR):
-1. **Hộp Thoại Chào Đón Tinh Tế (Welcome Photo):**
-   - Người nhận có thể chọn **tải ảnh chân dung/kỷ niệm của mình** lên để dán vào thiệp.
-   - Hoặc bấm **"Mở Thiệp Ngay"** nếu muốn xem trực tiếp mà không cần chọn ảnh.
-2. **Con Tem Bưu Chính Kỷ Niệm (Stamp):**
-   - Ảnh người nhận tải lên sẽ được thu nhỏ lồng vào con tem bưu chính mạ vàng ở góc bức thư bên trong phong bì và đồng bộ vào khung ảnh kỷ niệm.
-3. **Tự Động Phát Nhạc Du Dương:**
-   - Ngay khoảnh khắc người nhận bấm con dấu sáp đỏ `[MỞ THIỆP]`, bộ nhạc nền hộp nhạc (Music Box) sẽ tự động ngân vang nốt chuông êm dịu mà không bị trình duyệt chặn.
-4. **Hiệu Ứng Gõ Chữ Tay (Typewriter):**
-   - Từng dòng tâm thư ấm áp được viết ra tự nhiên như người gửi đang nắn nót từng chữ.
-5. **Nút 1-Chạm Gửi Lời Cảm Ơn:**
-   - Sau khi đọc thư, người nhận có thể bấm nút **[💖 Gửi Lời Cảm Ơn Đến Người Tặng]** để tự động copy lời cảm kích ngọt ngào và dán gửi lại cho bạn qua Zalo.
-
+- **Gửi link trực tiếp:** Bạn chỉ cần sao chép đường link trang web gửi vào nhóm Zalo, Facebook, lớp học, cơ quan, hoặc đăng lên Story. Bất kỳ ai mở link cũng đều nhận được trọn vẹn thông điệp yêu thương.
+- **Kèm chữ ký người gửi (Tùy chọn):** Nhập tên bạn vào ô *"Tên người gửi"* ở phần Chia Sẻ (ví dụ: `Tuấn Hùng`), đường link sẽ tự sinh kèm tham số `?from=Tuấn+Hùng`. Khi người nhận mở ra, cuối bức thư sẽ hiện: *"Với tất cả sự trân quý & yêu thương từ Tuấn Hùng!"*.
+- **In mã QR tặng quà:** Bấm **[⬇️ Tải Ảnh QR (PNG)]** để lưu ảnh mã QR về máy, in ra kẹp vào bó hoa tươi hoặc dán lên hộp quà tặng để người nhận quét bằng Zalo/Camera điện thoại.
