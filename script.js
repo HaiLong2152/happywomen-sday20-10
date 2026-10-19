@@ -615,6 +615,8 @@ function triggerFireworks() {
 
 if (fireworksBtn) fireworksBtn.addEventListener('click', triggerFireworks);
 if (footerFireworksBtn) footerFireworksBtn.addEventListener('click', triggerFireworks);
+const fireworksNavBtn = document.getElementById('fireworksNavBtn');
+if (fireworksNavBtn) fireworksNavBtn.addEventListener('click', triggerFireworks);
 
 // Gửi lời cảm ơn người tặng
 function sendThankYouMessage() {

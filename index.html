@@ -17,8 +17,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   
-  <!-- Cache-busting v=2.5 đảm bảo điện thoại tải phiên bản mới nhất -->
-  <link rel="stylesheet" href="style.css?v=2.5">
+  <!-- Cache-busting v=3.0 đảm bảo điện thoại tải phiên bản mới nhất -->
+  <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
   <!-- Hiệu ứng Canvas cánh hoa hồng & trái tim rơi -->
@@ -60,45 +60,6 @@
     </div>
   </div>
 
-  <!-- Modal 2: Popup Lấy Mã QR & Link Chia Sẻ (Ẩn trong popup, không làm rối thiệp) -->
-  <div id="qrModal" class="qr-modal hidden" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
-    <div class="qr-modal-backdrop"></div>
-    <div class="qr-modal-card glass-panel">
-      <button id="closeQrModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
-      <div class="qr-badge">📱 MÃ QR & LINK CHIA SẺ 20/10</div>
-      <h3 class="qr-modal-title" id="qrModalTitle">Mã QR Thiệp Chúc Mừng 20/10</h3>
-      <p class="qr-modal-desc" id="qrModalDesc">
-        Dùng Camera điện thoại hoặc Zalo quét mã để mở ngay thiệp chúc mừng yêu thương:
-      </p>
-      
-      <div class="qr-code-frame">
-        <div id="qrCodeContainer" class="qr-code-box"></div>
-        <div class="qr-target-tag" id="qrTargetTag">💐 Chúc Mừng 20/10 Phụ Nữ Việt Nam 💖</div>
-      </div>
-
-      <div class="qr-actions">
-        <button id="downloadQrBtn" class="btn btn-primary btn-sm">
-          <span>⬇️ Tải Ảnh Mã QR (PNG)</span>
-        </button>
-        <button id="copyQrLinkBtn" class="btn btn-secondary btn-sm">
-          <span>📋 Sao Chép Link Web</span>
-        </button>
-        <button id="copyZaloMsgBtn" class="btn btn-secondary btn-sm">
-          <span>💬 Copy Tin Nhắn Zalo</span>
-        </button>
-      </div>
-
-      <div class="sender-name-group" style="margin-top: 12px; text-align: left;">
-        <label for="senderNameInput" style="font-size: 0.8rem; font-weight: 700; color: var(--deep-rose); display: block; margin-bottom: 4px;">✍️ Ký tên bạn vào thiệp (Tùy chọn):</label>
-        <input type="text" id="senderNameInput" placeholder="Ví dụ: Con trai, Anh, Tuấn Hùng, Nhóm bạn..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--soft-rose); font-size: 0.88rem; outline: none;">
-      </div>
-
-      <p class="qr-print-tip" style="margin-top: 10px;">
-        💡 <em>Mẹo: Tải ảnh mã QR này để in thiệp, in sticker dán lên bó hoa tươi hoặc hộp quà tặng thật gửi cho người ấy nhé!</em>
-      </p>
-    </div>
-  </div>
-
   <!-- Thanh điều khiển tiện ích trên cùng -->
   <header class="top-nav">
     <div class="brand-badge" id="brandBadge">
@@ -112,12 +73,9 @@
           <span></span><span></span><span></span>
         </span>
       </button>
-      <button id="navShareBtn" class="icon-btn" title="Xem mã QR của thiệp này" aria-label="Xem mã QR của thiệp này">
-        <span>📱</span> <span>Mã QR</span>
+      <button id="fireworksNavBtn" class="icon-btn" title="Bắn pháo hoa chúc mừng">
+        <span>🎆</span> <span>Pháo Hoa</span>
       </button>
-      <a href="create.html" class="icon-btn share-btn" title="Trang tạo thiệp theo tên riêng">
-        <span>✨</span> <span>Tạo Thiệp Mới</span>
-      </a>
     </div>
   </header>
 
@@ -311,12 +269,6 @@
         <button id="footerFireworksBtn" class="btn btn-accent">
           <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
         </button>
-        <button id="footerShareBtn" class="btn btn-secondary">
-          <span>📱 Mã QR Thiệp Này</span>
-        </button>
-        <a href="create.html" class="btn btn-secondary">
-          <span>✨ Tự Tạo Thiệp Theo Tên Riêng</span>
-        </a>
       </div>
 
       <p class="copyright">
@@ -333,7 +285,7 @@
 
   <!-- Thư viện tạo mã QR offline 100% -->
   <script src="qrcode.min.js"></script>
-  <!-- Cache-busting v=2.5 -->
-  <script src="script.js?v=2.5"></script>
+  <!-- Cache-busting v=3.0 -->
+  <script src="script.js?v=3.0"></script>
 </body>
 </html>
