@@ -17,48 +17,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   
-  <!-- Cache-busting v=3.0 đảm bảo điện thoại tải phiên bản mới nhất -->
-  <link rel="stylesheet" href="style.css?v=3.0">
+  <!-- Cache-busting v=3.4 đảm bảo điện thoại tải phiên bản mới nhất -->
+  <link rel="stylesheet" href="style.css?v=3.4">
 </head>
 <body>
   <!-- Hiệu ứng Canvas cánh hoa hồng & trái tim rơi -->
   <canvas id="petalCanvas" aria-hidden="true"></canvas>
 
-  <!-- Modal 1: Chào Đón & Đính Kèm Ảnh Kỷ Niệm (Tùy Chọn) -->
-  <div id="welcomePhotoModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
-    <div class="welcome-photo-backdrop"></div>
-    <div class="welcome-photo-card glass-panel">
-      <button id="closeWelcomeModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
-      <div class="welcome-badge">🌸 MÓN QUÀ 20/10 DÀNH TẶNG BẠN 🌸</div>
-      <h3 class="welcome-title" id="welcomeTitle">Dành Tặng Người Phụ Nữ Tuyệt Vời!</h3>
-      <p class="welcome-subtitle">
-        Có một bức thiệp yêu thương đang chờ bạn mở. Bạn có muốn đính kèm một bức ảnh xinh đẹp của mình lên thiệp kỷ niệm này không?
-      </p>
-
-      <div class="photo-upload-slot" id="photoUploadSlot" tabindex="0">
-        <div class="slot-idle" id="slotIdle">
-          <span class="slot-camera-icon">📷</span>
-          <span class="slot-text">Chạm vào đây để chọn ảnh của bạn</span>
-          <span class="slot-subtext">(Ảnh chân dung, nụ cười rạng rỡ của bạn)</span>
-        </div>
-        <div class="slot-preview hidden" id="slotPreview">
-          <img id="welcomePreviewImg" src="" alt="Ảnh bạn đã chọn">
-          <span class="slot-change-hint">Chạm để đổi ảnh khác</span>
-        </div>
-        <input type="file" id="welcomePhotoFileInput" accept="image/*" class="sr-only">
-      </div>
-
-      <div class="welcome-actions">
-        <button id="confirmWelcomePhotoBtn" class="btn btn-primary hidden">
-          <span>✨ Dán Ảnh Này & Mở Thiệp</span>
-        </button>
-        <button id="skipWelcomePhotoBtn" class="btn btn-secondary">
-          <span>🌸 Mở Thiệp Ngay (Không Cần Ảnh)</span>
-        </button>
-      </div>
-      <p class="welcome-note">*(Ảnh chỉ lưu trên máy bạn và có thể đổi bất kỳ lúc nào)*</p>
-    </div>
-  </div>
 
   <!-- Thanh điều khiển tiện ích trên cùng -->
   <header class="top-nav">
@@ -108,6 +73,7 @@
 
           <!-- Bức thư bên trong -->
           <article class="letter-paper" id="letterPaper">
+            <button id="closeLetterPaperBtn" class="btn-fold-letter" title="Đóng phong bì lại">✕ Đóng thiệp</button>
             <!-- Con tem ảnh bưu chính kỷ niệm 20/10 -->
             <div class="letter-stamp" id="recipientStamp" title="Tem bưu chính kỷ niệm 20/10">
               <div class="stamp-perforation">
@@ -138,31 +104,15 @@
                 <span class="date-tag">20 tháng 10 năm 2026</span>
               </div>
             </footer>
-
-            <!-- Nút hành động trong thiệp -->
-            <div class="letter-actions">
-              <button id="thankSenderBtn" class="btn btn-primary btn-sm thank-btn" title="Gửi lời cảm ơn chân thành đến người gửi">
-                <span>💖 Gửi Lời Cảm Ơn</span>
-              </button>
-              <button id="randomWishBtn" class="btn btn-secondary btn-sm" title="Đổi một lời chúc ý nghĩa khác">
-                🔄 Đổi Lời Chúc Khác
-              </button>
-              <button id="copyWishBtn" class="btn btn-secondary btn-sm" title="Sao chép nội dung lời chúc này">
-                📋 Sao Chép Lời Chúc
-              </button>
-              <button id="fireworksBtn" class="btn btn-accent btn-sm" title="Bắn pháo hoa & hoa hồng rực rỡ">
-                🎆 Bắn Pháo Hoa
-              </button>
-            </div>
           </article>
         </div>
       </div>
 
       <p class="envelope-hint" id="envelopeHint">👇 Chạm vào con dấu sáp <strong>[MỞ THIỆP]</strong> để khám phá lời chúc bí mật!</p>
       
-      <div class="envelope-preview-action" style="margin-top: 14px; text-align: center;">
-        <button id="toggleEnvelopeBtn" class="btn btn-primary btn-sm" title="Bấm để mở hoặc đóng phong bì xem trước">
-          <span>👁️ Mở Thiệp Xem Thử</span>
+      <div id="envelopeCloseWrapper" class="envelope-close-wrapper hidden" style="text-align: center; margin-top: 14px;">
+        <button id="closeEnvelopeBtn" class="btn btn-secondary btn-sm" title="Gấp và đóng phong bì lại">
+          <span>✉️ Đóng Phong Bì Lại</span>
         </button>
       </div>
     </section>
@@ -233,29 +183,6 @@
       </div>
     </section>
 
-    <!-- Khung Ảnh Kỷ Niệm Tùy Chọn -->
-    <section class="photo-frame-section glass-panel">
-      <div class="frame-content">
-        <div class="frame-wrapper">
-          <div class="ornament-corner top-left"></div>
-          <div class="ornament-corner top-right"></div>
-          <div class="ornament-corner bottom-left"></div>
-          <div class="ornament-corner bottom-right"></div>
-          
-          <img id="photoDisplay" src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop" alt="Bó hoa chúc mừng 20/10 tươi thắm">
-          
-          <button id="recipientChangePhotoBtn" class="btn-change-photo-badge" title="Đổi hoặc thêm ảnh của bạn">
-            📷 Đổi / Thêm Ảnh Của Bạn
-          </button>
-
-          <div class="frame-caption">
-            <p id="photoCaption">"Vì phụ nữ là để yêu thương trọn đời!"</p>
-          </div>
-        </div>
-        <input type="file" id="imageUploadInput" accept="image/*" class="sr-only">
-      </div>
-    </section>
-
     <!-- Lời kết & Nút chia sẻ chân trang -->
     <footer class="page-footer">
       <p class="footer-blessing" id="footerBlessing">
@@ -277,6 +204,42 @@
     </footer>
   </main>
 
+  <!-- Modal Chào Đón & Đính Kèm Ảnh Kỷ Niệm (Tùy Chọn) -->
+  <div id="welcomePhotoModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-photo-backdrop"></div>
+    <div class="welcome-photo-card glass-panel">
+      <button id="closeWelcomeModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
+      <div class="welcome-badge">🌸 MÓN QUÀ 20/10 DÀNH TẶNG BẠN 🌸</div>
+      <h3 class="welcome-title" id="welcomeTitle">Dành Tặng Người Phụ Nữ Tuyệt Vời!</h3>
+      <p class="welcome-subtitle">
+        Có một bức thiệp yêu thương đang chờ bạn mở. Bạn có muốn đính kèm một bức ảnh xinh đẹp của mình lên con tem phong thư kỷ niệm này không?
+      </p>
+
+      <div class="photo-upload-slot" id="photoUploadSlot" tabindex="0" role="button" aria-label="Chọn ảnh kỷ niệm của bạn">
+        <div class="slot-idle" id="slotIdle">
+          <span class="slot-camera-icon">📷</span>
+          <span class="slot-text">Chạm vào đây để chọn ảnh của bạn</span>
+          <span class="slot-subtext">(Ảnh chân dung, nụ cười rạng rỡ của bạn)</span>
+        </div>
+        <div class="slot-preview hidden" id="slotPreview">
+          <img id="welcomePreviewImg" src="" alt="Ảnh bạn đã chọn">
+          <span class="slot-change-hint">Chạm để đổi ảnh khác</span>
+        </div>
+        <input type="file" id="welcomePhotoFileInput" accept="image/*" class="sr-only">
+      </div>
+
+      <div class="welcome-actions">
+        <button id="confirmWelcomePhotoBtn" class="btn btn-primary hidden">
+          <span>✨ Dán Ảnh Lên Tem Thư</span>
+        </button>
+        <button id="skipWelcomePhotoBtn" class="btn btn-secondary">
+          <span>🌸 Tiếp Tục Đến Phong Thư</span>
+        </button>
+      </div>
+      <p class="welcome-note">*(Ảnh chỉ lưu trên máy bạn và hiển thị trên con tem thư)*</p>
+    </div>
+  </div>
+
   <!-- Toast Notification Thông Báo Đã Copy -->
   <div id="toast" class="toast" role="alert" aria-live="polite">
     <span class="toast-icon" id="toastIcon">🎉</span>
@@ -285,7 +248,7 @@
 
   <!-- Thư viện tạo mã QR offline 100% -->
   <script src="qrcode.min.js"></script>
-  <!-- Cache-busting v=3.0 -->
-  <script src="script.js?v=3.0"></script>
+  <!-- Cache-busting v=3.4 -->
+  <script src="script.js?v=3.4"></script>
 </body>
 </html>

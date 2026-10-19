@@ -78,17 +78,12 @@ const waxSeal = document.getElementById('waxSeal');
 const envelopeHint = document.getElementById('envelopeHint');
 
 const thankSenderBtn = document.getElementById('thankSenderBtn');
-const randomWishBtn = document.getElementById('randomWishBtn');
-const copyWishBtn = document.getElementById('copyWishBtn');
 const fireworksBtn = document.getElementById('fireworksBtn');
 
 const recipientStamp = document.getElementById('recipientStamp');
 const stampImg = document.getElementById('stampImg');
 const photoDisplay = document.getElementById('photoDisplay');
 const photoCaption = document.getElementById('photoCaption');
-const recipientChangePhotoBtn = document.getElementById('recipientChangePhotoBtn');
-const imageUploadInput = document.getElementById('imageUploadInput');
-const resetPhotoBtn = document.getElementById('resetPhotoBtn');
 
 // Welcome Photo Modal Elements
 const welcomePhotoModal = document.getElementById('welcomePhotoModal');
@@ -255,17 +250,13 @@ function startTypewriterEffect(text) {
   typeNext();
 }
 
-// Cập nhật hình ảnh tem và khung ảnh
+// Cập nhật hình ảnh tem thư
 function updatePhotoDisplay() {
+  const defaultPhoto = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop";
   if (recipientPhotoData) {
-    if (photoDisplay) photoDisplay.src = recipientPhotoData;
     if (stampImg) stampImg.src = recipientPhotoData;
-    if (photoCaption) photoCaption.textContent = "Khoảnh khắc xinh đẹp và rạng rỡ nhất của bạn! ✨";
   } else {
-    const defaultPhoto = "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop";
-    if (photoDisplay) photoDisplay.src = defaultPhoto;
-    if (stampImg) stampImg.src = defaultPhoto;
-    if (photoCaption) photoCaption.textContent = "\"Vì phụ nữ là để yêu thương trọn đời!\"";
+    if (stampImg && (!stampImg.src || stampImg.src === '')) stampImg.src = defaultPhoto;
   }
 }
 
@@ -276,8 +267,8 @@ function applyRecipientPhoto(dataUrl) {
     sessionStorage.setItem('recipient_photo', dataUrl);
   } catch (e) {}
 
-  updatePhotoDisplay();
-  showToast("Đã đính kèm ảnh của bạn vào thiệp chúc mừng!", "📷");
+  if (stampImg) stampImg.src = dataUrl;
+  showToast("Đã dán ảnh của bạn lên con tem phong thư! 🌸", "📷");
 }
 
 // ==========================================
@@ -296,6 +287,11 @@ function initFromURL() {
     customRecipientName = decodeURIComponent(toParam).trim();
   }
 
+  const photoParam = urlParams.get('photo') || urlParams.get('img');
+  if (photoParam && stampImg) {
+    stampImg.src = decodeURIComponent(photoParam);
+  }
+
   const wishParam = urlParams.get('wish');
   if (wishParam !== null && !isNaN(parseInt(wishParam))) {
     currentWishIndex = Math.abs(parseInt(wishParam)) % UNIVERSAL_WISHES.length;
@@ -305,7 +301,7 @@ function initFromURL() {
   updatePhotoDisplay();
   updateShareSectionOutputs();
 
-  // Kiểm tra hiển thị hộp thoại Chào Đón & Đính Kèm Ảnh
+  // Hiển thị hộp thoại chào đón & tùy chọn đính kèm ảnh
   checkWelcomePhotoModal();
 }
 
@@ -408,6 +404,8 @@ function downloadQrFromElement(containerEl, fileName = "ma-qr-thiep-20-10.png") 
   }
 }
 
+
+
 // ==========================================
 // 6. MODAL CHÀO ĐÓN & ĐÍNH KÈM ẢNH
 // ==========================================
@@ -472,9 +470,7 @@ if (confirmWelcomePhotoBtn) {
     } catch (e) {}
 
     if (welcomePhotoModal) welcomePhotoModal.classList.add('hidden');
-    setTimeout(() => {
-      openEnvelope();
-    }, 400);
+    showToast("Đã dán ảnh lên tem thư! Hãy chạm vào con dấu sáp để mở thiệp nhé 💌", "🌹");
   });
 }
 
@@ -485,55 +481,28 @@ function dismissWelcomeModal() {
   if (welcomePhotoModal) welcomePhotoModal.classList.add('hidden');
 }
 
-if (skipWelcomePhotoBtn) skipWelcomePhotoBtn.addEventListener('click', dismissWelcomeModal);
-if (closeWelcomeModalBtn) closeWelcomeModalBtn.addEventListener('click', dismissWelcomeModal);
-
-if (recipientChangePhotoBtn) {
-  recipientChangePhotoBtn.addEventListener('click', () => {
-    if (imageUploadInput) imageUploadInput.click();
-  });
+if (skipWelcomePhotoBtn) {
+  skipWelcomePhotoBtn.addEventListener('click', dismissWelcomeModal);
 }
-
-if (imageUploadInput) {
-  imageUploadInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        applyRecipientPhoto(evt.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-}
-
-if (resetPhotoBtn) {
-  resetPhotoBtn.addEventListener('click', () => {
-    recipientPhotoData = null;
-    try {
-      sessionStorage.removeItem('recipient_photo');
-    } catch (e) {}
-    updatePhotoDisplay();
-    if (imageUploadInput) imageUploadInput.value = '';
-    showToast("Đã đặt lại ảnh hoa mặc định!", "🌸");
-  });
+if (closeWelcomeModalBtn) {
+  closeWelcomeModalBtn.addEventListener('click', dismissWelcomeModal);
 }
 
 // ==========================================
 // 7. MỞ PHONG BÌ & CÁC NÚT TƯƠNG TÁC
 // ==========================================
-const toggleEnvelopeBtn = document.getElementById('toggleEnvelopeBtn');
+const closeEnvelopeBtn = document.getElementById('closeEnvelopeBtn');
+const closeLetterPaperBtn = document.getElementById('closeLetterPaperBtn');
+const envelopeCloseWrapper = document.getElementById('envelopeCloseWrapper');
 
 function openEnvelope() {
   if (isEnvelopeOpened) return;
   isEnvelopeOpened = true;
   envelope.classList.add('is-open');
-  envelopeHint.textContent = "💖 Thiệp chúc đã được mở ra với trọn vẹn yêu thương!";
+  envelopeHint.innerHTML = "💌 Thiệp đã mở! Bạn có thể bấm <strong>[Đóng Phong Bì Lại]</strong> bên dưới để gấp thiệp.";
   
-  if (toggleEnvelopeBtn) {
-    toggleEnvelopeBtn.innerHTML = '<span>✉️ Đóng Lại Phong Bì</span>';
-    toggleEnvelopeBtn.classList.remove('btn-primary');
-    toggleEnvelopeBtn.classList.add('btn-secondary');
+  if (envelopeCloseWrapper) {
+    envelopeCloseWrapper.classList.remove('hidden');
   }
 
   // Tự động phát nhạc nền nhẹ nhàng
@@ -549,14 +518,13 @@ function openEnvelope() {
 }
 
 function closeEnvelope() {
+  if (!isEnvelopeOpened) return;
   isEnvelopeOpened = false;
   envelope.classList.remove('is-open');
   envelopeHint.innerHTML = '👇 Chạm vào con dấu sáp <strong>[MỞ THIỆP]</strong> để khám phá lời chúc bí mật!';
   
-  if (toggleEnvelopeBtn) {
-    toggleEnvelopeBtn.innerHTML = '<span>👁️ Mở Thiệp Xem Thử</span>';
-    toggleEnvelopeBtn.classList.remove('btn-secondary');
-    toggleEnvelopeBtn.classList.add('btn-primary');
+  if (envelopeCloseWrapper) {
+    envelopeCloseWrapper.classList.add('hidden');
   }
 
   if (typewriterTimeout) clearTimeout(typewriterTimeout);
@@ -571,41 +539,22 @@ function toggleEnvelope() {
   }
 }
 
-if (toggleEnvelopeBtn) {
-  toggleEnvelopeBtn.addEventListener('click', toggleEnvelope);
+if (closeEnvelopeBtn) {
+  closeEnvelopeBtn.addEventListener('click', closeEnvelope);
+}
+
+if (closeLetterPaperBtn) {
+  closeLetterPaperBtn.addEventListener('click', closeEnvelope);
 }
 
 if (waxSeal) {
-  waxSeal.addEventListener('click', openEnvelope);
+  waxSeal.addEventListener('click', toggleEnvelope);
   waxSeal.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      openEnvelope();
+      toggleEnvelope();
     }
   });
 }
-
-// Đổi lời chúc khác
-if (randomWishBtn) {
-  randomWishBtn.addEventListener('click', (e) => {
-    currentWishIndex = (currentWishIndex + 1) % UNIVERSAL_WISHES.length;
-    updateWishDisplay();
-    triggerSparkleAtElement(e.currentTarget);
-    const current = UNIVERSAL_WISHES[currentWishIndex];
-    startTypewriterEffect(current.wish);
-    showToast("Đã đổi sang lời chúc ý nghĩa mới!", "✨");
-  });
-}
-
-// Sao chép nội dung lời chúc
-function copyWishText() {
-  const greeting = recipientGreeting.textContent;
-  const wish = wishContent.textContent;
-  const quote = quoteContent.textContent;
-  const fullText = `💐 CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10 💐\n\n${greeting}\n\n${wish}\n\n${quote}\n\n✨ Chúc bạn có một ngày 20/10 ngập tràn niềm vui và hạnh phúc! ✨`;
-  copyToClipboard(fullText, "Đã sao chép lời chúc! Hãy gửi ngay qua Zalo nhé 💌", "📋");
-}
-
-if (copyWishBtn) copyWishBtn.addEventListener('click', copyWishText);
 
 // Bắn pháo hoa
 function triggerFireworks() {

@@ -535,6 +535,29 @@ body {
   overflow: hidden;
 }
 
+.btn-fold-letter {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--soft-rose);
+  color: var(--deep-rose);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: var(--transition-smooth);
+  z-index: 5;
+}
+
+.btn-fold-letter:hover {
+  background: var(--deep-rose);
+  color: white;
+  transform: translateY(-1px);
+}
+
 .letter-decor {
   text-align: center;
   color: var(--soft-rose);
