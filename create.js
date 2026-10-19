@@ -256,3 +256,4 @@ if (canvas) {
 document.addEventListener('DOMContentLoaded', () => {
   updateOutputs();
 });
+
