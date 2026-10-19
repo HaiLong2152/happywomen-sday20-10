@@ -54,6 +54,12 @@ let customSenderName = '';
 let customRecipientName = '';
 let isEnvelopeOpened = false;
 
+// Tùy biến lời chúc & Nơi nhận lời cảm ơn
+let customWishText = '';
+let creatorZalo = '';
+let creatorMess = '';
+let creatorInbox = '';
+
 // Dữ liệu ảnh người dùng tải lên
 let recipientPhotoData = null;
 try {
@@ -78,7 +84,7 @@ const waxSeal = document.getElementById('waxSeal');
 const envelopeHint = document.getElementById('envelopeHint');
 
 const thankSenderBtn = document.getElementById('thankSenderBtn');
-const fireworksBtn = document.getElementById('fireworksBtn');
+const footerRoseRainBtn = document.getElementById('footerRoseRainBtn');
 
 const recipientStamp = document.getElementById('recipientStamp');
 const stampImg = document.getElementById('stampImg');
@@ -95,6 +101,20 @@ const welcomePreviewImg = document.getElementById('welcomePreviewImg');
 const welcomePhotoFileInput = document.getElementById('welcomePhotoFileInput');
 const confirmWelcomePhotoBtn = document.getElementById('confirmWelcomePhotoBtn');
 const skipWelcomePhotoBtn = document.getElementById('skipWelcomePhotoBtn');
+
+// Thank You Modal Elements
+const thankYouModal = document.getElementById('thankYouModal');
+const thankModalBackdrop = document.getElementById('thankModalBackdrop');
+const closeThankModalBtn = document.getElementById('closeThankModalBtn');
+const thankModalTitle = document.getElementById('thankModalTitle');
+const thankMessageInput = document.getElementById('thankMessageInput');
+const thankChips = document.querySelectorAll('#thankTemplateSelector .wish-chip');
+const sendZaloActionBtn = document.getElementById('sendZaloActionBtn');
+const sendZaloBtnText = document.getElementById('sendZaloBtnText');
+const sendMessActionBtn = document.getElementById('sendMessActionBtn');
+const sendMessBtnText = document.getElementById('sendMessBtnText');
+const sendInboxActionBtn = document.getElementById('sendInboxActionBtn');
+const copyThankTextBtn = document.getElementById('copyThankTextBtn');
 
 // Share Hub Elements
 const shareSection = document.getElementById('shareSection');
@@ -118,7 +138,6 @@ const copyQrLinkBtn = document.getElementById('copyQrLinkBtn');
 // Top nav & Footer Buttons
 const navShareBtn = document.getElementById('navShareBtn');
 const footerThankBtn = document.getElementById('footerThankBtn');
-const footerFireworksBtn = document.getElementById('footerFireworksBtn');
 const footerShareBtn = document.getElementById('footerShareBtn');
 const footerBlessing = document.getElementById('footerBlessing');
 
@@ -208,7 +227,7 @@ function updateWishDisplay() {
     recipientGreeting.textContent = current.greeting;
   }
 
-  wishContent.textContent = current.wish;
+  wishContent.textContent = customWishText || current.wish;
   quoteContent.textContent = current.quote;
 
   // Cập nhật chữ ký người gửi
@@ -286,6 +305,15 @@ function initFromURL() {
   if (toParam) {
     customRecipientName = decodeURIComponent(toParam).trim();
   }
+
+  const msgParam = urlParams.get('msg') || urlParams.get('message');
+  if (msgParam) {
+    customWishText = decodeURIComponent(msgParam).trim();
+  }
+
+  creatorZalo = urlParams.get('zalo') || '';
+  creatorMess = urlParams.get('mess') || '';
+  creatorInbox = urlParams.get('inbox') || '';
 
   const photoParam = urlParams.get('photo') || urlParams.get('img');
   if (photoParam && stampImg) {
@@ -514,7 +542,7 @@ function openEnvelope() {
 
   // Hiệu ứng chữ gõ tay nắn nót
   const current = UNIVERSAL_WISHES[currentWishIndex % UNIVERSAL_WISHES.length];
-  startTypewriterEffect(current.wish);
+  startTypewriterEffect(customWishText || current.wish);
 }
 
 function closeEnvelope() {
@@ -556,30 +584,181 @@ if (waxSeal) {
   });
 }
 
-// Bắn pháo hoa
-function triggerFireworks() {
-  launchConfetti(120);
-  showToast("🎆 Chúc mừng ngày 20/10 rạng ngời và ngập tràn hạnh phúc!", "💐");
+// Thả Cơn Mưa Hoa Hồng Chúc Phúc 20/10 (Thay thế pháo hoa confetti)
+function triggerRoseRain() {
+  playChimeEffect();
+  
+  if (typeof Petal !== 'undefined' && Array.isArray(particles)) {
+    for (let i = 0; i < 45; i++) {
+      const p = new Petal();
+      p.x = Math.random() * (canvas ? canvas.width : window.innerWidth);
+      p.y = -Math.random() * 250 - 20;
+      p.size = Math.random() * 16 + 12;
+      p.speedY = Math.random() * 2.8 + 1.8;
+      p.speedX = Math.random() * 2.4 - 1.2;
+      p.type = Math.random() > 0.4 ? 0 : 1;
+      p.color = Math.random() > 0.5 ? '#ff2a54' : '#ff758f';
+      particles.push(p);
+    }
+    setTimeout(() => {
+      if (particles.length > PARTICLE_COUNT) {
+        particles = particles.slice(0, PARTICLE_COUNT);
+      }
+    }, 8000);
+  }
+
+  showToast("Gửi ngàn đóa hồng thơm ngát & lời chúc 20/10 ngọt ngào nhất tới bạn! 🌹", "🌸");
 }
 
-if (fireworksBtn) fireworksBtn.addEventListener('click', triggerFireworks);
-if (footerFireworksBtn) footerFireworksBtn.addEventListener('click', triggerFireworks);
-const fireworksNavBtn = document.getElementById('fireworksNavBtn');
-if (fireworksNavBtn) fireworksNavBtn.addEventListener('click', triggerFireworks);
+if (footerRoseRainBtn) footerRoseRainBtn.addEventListener('click', triggerRoseRain);
 
-// Gửi lời cảm ơn người tặng
-function sendThankYouMessage() {
-  const who = customSenderName ? customSenderName : "bạn";
-  const thankText = customSenderName
-    ? `💖 Cảm ơn ${customSenderName} rất nhiều! Tấm thiệp 20/10 thật đẹp, bất ngờ và ấm áp. Chúc ${customSenderName} luôn nhiều niềm vui và an lành nhé! 🥰`
-    : `💖 Cảm ơn bạn rất nhiều! Tấm thiệp 20/10 thật đẹp, ngọt ngào và xúc động. Mình rất vui và hạnh phúc khi nhận được món quà này! 🥰`;
-
-  copyToClipboard(thankText, `✨ Đã sao chép lời cảm ơn! Hãy dán gửi lại cho ${who} qua Zalo nhé 💌`, "💖");
-  launchConfetti(70);
+// Các mẫu lời cảm ơn chuẩn dành cho người nhận
+function getThankTemplates(sender) {
+  const who = sender || "bạn";
+  return [
+    `💖 Cảm ơn ${who} rất nhiều! Tấm thiệp 20/10 thật đẹp, bất ngờ và ấm áp. Nhận được món quà tinh thần này mình rất vui và xúc động. Chúc ${who} luôn nhiều niềm vui, may mắn và an lành nhé! 🥰`,
+    `🌸 Nhận được bức thiệp 20/10 của ${who} mà nụ cười nở rộ cả ngày hôm nay! Cảm ơn vì sự chu đáo, tinh tế và những lời chúc ngọt ngào này nhé. Chúc ${who} luôn hạnh phúc và gặt hái ngàn thành công! 🌷`,
+    `✨ Cảm ơn ${who} vì tấm thiệp 20/10 vô cùng ý nghĩa! Món quà tinh thần ngọt ngào và đáng yêu nhất hôm nay. Cảm ơn bạn rất nhiều! 🥰`
+  ];
 }
 
-if (thankSenderBtn) thankSenderBtn.addEventListener('click', sendThankYouMessage);
-if (footerThankBtn) footerThankBtn.addEventListener('click', sendThankYouMessage);
+// Mở modal gửi lời cảm ơn
+function openThankYouModal() {
+  const who = customSenderName || "Người Tặng";
+  if (thankModalTitle) {
+    thankModalTitle.textContent = `Gửi Lời Cảm Ơn Đến ${who}!`;
+  }
+
+  const templates = getThankTemplates(customSenderName);
+  if (thankMessageInput) {
+    thankMessageInput.value = templates[0];
+  }
+
+  // Cập nhật cấu hình nút gửi Zalo
+  if (creatorZalo && sendZaloBtnText) {
+    sendZaloBtnText.textContent = `💬 Gửi Thẳng Qua Zalo (${creatorZalo})`;
+  } else if (sendZaloBtnText) {
+    sendZaloBtnText.textContent = "💬 Gửi Lời Cảm Ơn Qua Zalo";
+  }
+
+  // Cập nhật nút Messenger
+  if (creatorMess && sendMessActionBtn) {
+    sendMessActionBtn.classList.remove('hidden');
+    if (sendMessBtnText) {
+      sendMessBtnText.textContent = `💙 Gửi Qua Messenger Của ${who}`;
+    }
+  } else if (sendMessActionBtn) {
+    sendMessActionBtn.classList.add('hidden');
+  }
+
+  // Cập nhật nút Hộp thư bí mật
+  if (creatorInbox && sendInboxActionBtn) {
+    sendInboxActionBtn.classList.remove('hidden');
+  } else if (sendInboxActionBtn) {
+    sendInboxActionBtn.classList.add('hidden');
+  }
+
+  if (thankYouModal) {
+    thankYouModal.classList.remove('hidden');
+  }
+}
+
+function closeThankYouModal() {
+  if (thankYouModal) thankYouModal.classList.add('hidden');
+}
+
+if (closeThankModalBtn) closeThankModalBtn.addEventListener('click', closeThankYouModal);
+if (thankModalBackdrop) thankModalBackdrop.addEventListener('click', closeThankYouModal);
+
+// Chọn mẫu lời cảm ơn
+if (thankChips) {
+  thankChips.forEach((chip) => {
+    chip.addEventListener('click', (e) => {
+      thankChips.forEach(c => c.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      const idx = parseInt(e.currentTarget.getAttribute('data-thank-idx'), 10) || 0;
+      const templates = getThankTemplates(customSenderName);
+      if (thankMessageInput) {
+        thankMessageInput.value = templates[idx];
+      }
+    });
+  });
+}
+
+// Hành động gửi Zalo
+if (sendZaloActionBtn) {
+  sendZaloActionBtn.addEventListener('click', () => {
+    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
+    const cleanZalo = creatorZalo ? creatorZalo.replace(/[^0-9]/g, '') : '';
+    copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy dán vào Zalo nhé 💌", "💬");
+    triggerRoseRain();
+    closeThankYouModal();
+    setTimeout(() => {
+      if (cleanZalo) {
+        window.open(`https://zalo.me/${cleanZalo}`, '_blank');
+      } else {
+        window.open('https://chat.zalo.me/', '_blank');
+      }
+    }, 400);
+  });
+}
+
+// Hành động gửi Messenger
+if (sendMessActionBtn) {
+  sendMessActionBtn.addEventListener('click', () => {
+    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
+    copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy dán vào Messenger nhé 💌", "💙");
+    triggerRoseRain();
+    closeThankYouModal();
+    let messUrl = creatorMess.trim();
+    if (!messUrl.startsWith('http://') && !messUrl.startsWith('https://')) {
+      if (messUrl.startsWith('m.me/')) {
+        messUrl = 'https://' + messUrl;
+      } else {
+        messUrl = 'https://m.me/' + messUrl;
+      }
+    }
+    setTimeout(() => {
+      window.open(messUrl, '_blank');
+    }, 400);
+  });
+}
+
+// Hành động gửi Hộp Thư Bí Mật (ntfy.sh)
+if (sendInboxActionBtn) {
+  sendInboxActionBtn.addEventListener('click', async () => {
+    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
+    const recipientTitle = customRecipientName ? `từ ${customRecipientName}` : "từ Người Nhận";
+    try {
+      await fetch(`https://ntfy.sh/${creatorInbox}`, {
+        method: 'POST',
+        body: text,
+        headers: {
+          'Title': `💖 Lời cảm ơn 20/10 ${recipientTitle}`,
+          'Tags': 'heart,gift,blush'
+        }
+      });
+      showToast("Đã gửi lời cảm ơn vào Hộp Thư Bí Mật thành công! 💌", "💖");
+    } catch (e) {
+      copyToClipboard(text, "Đã lưu lời cảm ơn! Hãy gửi qua Zalo nhé 💌", "💖");
+    }
+    triggerRoseRain();
+    closeThankYouModal();
+  });
+}
+
+// Hành động chỉ copy lời nhắn
+if (copyThankTextBtn) {
+  copyThankTextBtn.addEventListener('click', () => {
+    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
+    copyToClipboard(text, "Đã sao chép lời cảm ơn! Bạn có thể dán gửi ở bất cứ đâu 💌", "📋");
+    triggerRoseRain();
+    closeThankYouModal();
+  });
+}
+
+if (thankSenderBtn) thankSenderBtn.addEventListener('click', openThankYouModal);
+if (footerThankBtn) footerThankBtn.addEventListener('click', openThankYouModal);
 
 // Sự kiện khi nhập tên người gửi (trong Popup QR)
 if (senderNameInput) {

@@ -28,11 +28,24 @@ const UNIVERSAL_WISHES = [
 let selectedWishIdx = 0;
 let studioQrInstance = null;
 
+// Sinh mã Hộp Thư Bí Mật (ntfy.sh) riêng cho người tạo
+let currentInboxCode = localStorage.getItem('thiep_inbox_code');
+if (!currentInboxCode) {
+  const rand = Math.random().toString(36).substring(2, 8);
+  currentInboxCode = `hop-thu-2010-${rand}`;
+  localStorage.setItem('thiep_inbox_code', currentInboxCode);
+}
+
 // DOM Elements
 const recipientNameInput = document.getElementById('recipientName');
 const senderNameInput = document.getElementById('senderName');
 const wishChips = document.querySelectorAll('.wish-chip');
-const wishPreviewText = document.getElementById('wishPreviewText');
+const customWishText = document.getElementById('customWishText');
+const senderZalo = document.getElementById('senderZalo');
+const senderMess = document.getElementById('senderMess');
+const inboxCodeInput = document.getElementById('inboxCodeInput');
+const openInboxLinkBtn = document.getElementById('openInboxLinkBtn');
+
 const resultUrlInput = document.getElementById('resultUrlInput');
 const copyUrlBtn = document.getElementById('copyUrlBtn');
 const zaloMsgText = document.getElementById('zaloMsgText');
@@ -40,6 +53,17 @@ const copyZaloBtn = document.getElementById('copyZaloBtn');
 const openPreviewTabBtn = document.getElementById('openPreviewTabBtn');
 const studioQrBox = document.getElementById('studioQrBox');
 const downloadQrBtn = document.getElementById('downloadQrBtn');
+
+// Khởi tạo giá trị ban đầu cho hộp thư và lời chúc
+if (inboxCodeInput) {
+  inboxCodeInput.value = `https://ntfy.sh/${currentInboxCode}`;
+}
+if (openInboxLinkBtn) {
+  openInboxLinkBtn.href = `https://ntfy.sh/${currentInboxCode}`;
+}
+if (customWishText) {
+  customWishText.value = UNIVERSAL_WISHES[0].wish;
+}
 
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toastMsg');
@@ -89,11 +113,26 @@ function buildPersonalizedUrl() {
   const base = getCardBaseUrl();
   const to = recipientNameInput ? recipientNameInput.value.trim() : '';
   const from = senderNameInput ? senderNameInput.value.trim() : '';
+  const wishContent = customWishText ? customWishText.value.trim() : '';
+  const defaultWish = UNIVERSAL_WISHES[selectedWishIdx].wish.trim();
+  const zalo = senderZalo ? senderZalo.value.trim() : '';
+  const mess = senderMess ? senderMess.value.trim() : '';
   
   const params = new URLSearchParams();
   if (to) params.set('to', to);
   if (from) params.set('from', from);
-  if (selectedWishIdx > 0) params.set('wish', selectedWishIdx.toString());
+
+  // Nếu người tạo chỉnh sửa lời chúc khác mẫu mặc định: truyền param msg
+  if (wishContent && wishContent !== defaultWish) {
+    params.set('msg', wishContent);
+  } else if (selectedWishIdx > 0) {
+    params.set('wish', selectedWishIdx.toString());
+  }
+
+  // Cấu hình đích nhận lời cảm ơn
+  if (zalo) params.set('zalo', zalo);
+  if (mess) params.set('mess', mess);
+  if (currentInboxCode) params.set('inbox', currentInboxCode);
 
   const query = params.toString();
   return query ? `${base}?${query}` : base;
@@ -163,14 +202,26 @@ if (senderNameInput) {
   senderNameInput.addEventListener('input', updateOutputs);
 }
 
+if (customWishText) {
+  customWishText.addEventListener('input', updateOutputs);
+}
+
+if (senderZalo) {
+  senderZalo.addEventListener('input', updateOutputs);
+}
+
+if (senderMess) {
+  senderMess.addEventListener('input', updateOutputs);
+}
+
 wishChips.forEach(chip => {
   chip.addEventListener('click', () => {
     wishChips.forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     selectedWishIdx = parseInt(chip.getAttribute('data-wish-idx')) || 0;
     
-    if (wishPreviewText) {
-      wishPreviewText.textContent = `"${UNIVERSAL_WISHES[selectedWishIdx].wish}"`;
+    if (customWishText) {
+      customWishText.value = UNIVERSAL_WISHES[selectedWishIdx].wish;
     }
     updateOutputs();
   });

@@ -17,8 +17,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   
-  <!-- Cache-busting v=3.4 đảm bảo điện thoại tải phiên bản mới nhất -->
-  <link rel="stylesheet" href="style.css?v=3.4">
+  <!-- Cache-busting v=3.6 đảm bảo điện thoại tải phiên bản mới nhất -->
+  <link rel="stylesheet" href="style.css?v=3.6">
 </head>
 <body>
   <!-- Hiệu ứng Canvas cánh hoa hồng & trái tim rơi -->
@@ -37,9 +37,6 @@
         <span class="music-waves paused" id="musicWaves" aria-hidden="true">
           <span></span><span></span><span></span>
         </span>
-      </button>
-      <button id="fireworksNavBtn" class="icon-btn" title="Bắn pháo hoa chúc mừng">
-        <span>🎆</span> <span>Pháo Hoa</span>
       </button>
     </div>
   </header>
@@ -193,8 +190,8 @@
         <button id="footerThankBtn" class="btn btn-primary">
           <span>💖 Gửi Lời Cảm Ơn Đến Người Tặng</span>
         </button>
-        <button id="footerFireworksBtn" class="btn btn-accent">
-          <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
+        <button id="footerRoseRainBtn" class="btn btn-accent" title="Thả ngàn cánh hoa hồng lãng mạn chúc phúc 20/10">
+          <span>🌹 Thả Cơn Mưa Hoa Hồng</span>
         </button>
       </div>
 
@@ -240,6 +237,52 @@
     </div>
   </div>
 
+  <!-- Modal Gửi Lời Cảm Ơn Cá Nhân Hóa -->
+  <div id="thankYouModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="thankModalTitle">
+    <div class="welcome-photo-backdrop" id="thankModalBackdrop"></div>
+    <div class="welcome-photo-card glass-panel" style="max-width: 520px;">
+      <button id="closeThankModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
+      <div class="welcome-badge">💖 GỬI LỜI CẢM ƠN 💖</div>
+      <h3 class="welcome-title" id="thankModalTitle">Gửi Lời Cảm Ơn Đến Người Tặng!</h3>
+      <p class="welcome-subtitle">
+        Bạn có thể chọn mẫu hoặc chỉnh sửa lời cảm ơn dưới đây để gửi tặng lại nhé:
+      </p>
+
+      <!-- Các mẫu cảm ơn nhanh -->
+      <div class="wishes-selector" id="thankTemplateSelector" style="margin-bottom: 12px; justify-content: center; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="wish-chip active" data-thank-idx="0">💖 Ngọt Ngào</button>
+        <button class="wish-chip" data-thank-idx="1">🌸 Tinh Tế</button>
+        <button class="wish-chip" data-thank-idx="2">✨ Chân Thành</button>
+      </div>
+
+      <!-- Ô soạn thảo lời cảm ơn -->
+      <textarea id="thankMessageInput" class="form-textarea" rows="4" style="width: 100%; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 0.95rem; border: 1.5px solid var(--soft-rose); line-height: 1.5; resize: vertical; margin-bottom: 14px; background: white;"></textarea>
+
+      <!-- Các nút gửi -->
+      <div class="thank-modal-actions" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Nút gửi Zalo -->
+        <button id="sendZaloActionBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          <span id="sendZaloBtnText">💬 Gửi Trực Tiếp Qua Zalo</span>
+        </button>
+
+        <!-- Nút gửi Messenger -->
+        <button id="sendMessActionBtn" class="btn btn-secondary hidden" style="width: 100%; justify-content: center; background: #0084ff; color: white; border: none;">
+          <span id="sendMessBtnText">💙 Gửi Qua Messenger Facebook</span>
+        </button>
+
+        <!-- Nút gửi vào Hộp Thư Bí Mật -->
+        <button id="sendInboxActionBtn" class="btn btn-secondary hidden" style="width: 100%; justify-content: center; border: 1.5px solid var(--deep-rose); color: var(--deep-rose);">
+          <span>💌 Gửi Vào Hộp Thư Bí Mật Của Người Tặng</span>
+        </button>
+
+        <!-- Nút sao chép tin nhắn -->
+        <button id="copyThankTextBtn" class="btn btn-outline" style="width: 100%; justify-content: center; border: 1px dashed var(--soft-rose); color: var(--muted-text); font-size: 0.85rem;">
+          <span>📋 Chỉ Sao Chép Lời Nhắn Này</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Thông Báo Đã Copy -->
   <div id="toast" class="toast" role="alert" aria-live="polite">
     <span class="toast-icon" id="toastIcon">🎉</span>
@@ -248,7 +291,7 @@
 
   <!-- Thư viện tạo mã QR offline 100% -->
   <script src="qrcode.min.js"></script>
-  <!-- Cache-busting v=3.4 -->
-  <script src="script.js?v=3.4"></script>
+  <!-- Cache-busting v=3.6 -->
+  <script src="script.js?v=3.6"></script>
 </body>
 </html>
