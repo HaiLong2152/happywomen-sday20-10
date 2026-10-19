@@ -258,26 +258,16 @@
       <!-- Ô soạn thảo lời cảm ơn -->
       <textarea id="thankMessageInput" class="form-textarea" rows="4" style="width: 100%; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 0.95rem; border: 1.5px solid var(--soft-rose); line-height: 1.5; resize: vertical; margin-bottom: 14px; background: white;"></textarea>
 
-      <!-- Các nút gửi -->
+      <!-- Các nút gửi: Giữ duy nhất Hộp Thư Bí Mật và Sao Chép -->
       <div class="thank-modal-actions" style="display: flex; flex-direction: column; gap: 10px;">
-        <!-- Nút gửi Zalo -->
-        <button id="sendZaloActionBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
-          <span id="sendZaloBtnText">💬 Gửi Trực Tiếp Qua Zalo</span>
-        </button>
-
-        <!-- Nút gửi Messenger -->
-        <button id="sendMessActionBtn" class="btn btn-secondary hidden" style="width: 100%; justify-content: center; background: #0084ff; color: white; border: none;">
-          <span id="sendMessBtnText">💙 Gửi Qua Messenger Facebook</span>
-        </button>
-
         <!-- Nút gửi vào Hộp Thư Bí Mật -->
-        <button id="sendInboxActionBtn" class="btn btn-secondary hidden" style="width: 100%; justify-content: center; border: 1.5px solid var(--deep-rose); color: var(--deep-rose);">
-          <span>💌 Gửi Vào Hộp Thư Bí Mật Của Người Tặng</span>
+        <button id="sendInboxActionBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          <span id="sendInboxBtnText">💌 Gửi Vào Hộp Thư Bí Mật Của Người Tặng</span>
         </button>
 
         <!-- Nút sao chép tin nhắn -->
-        <button id="copyThankTextBtn" class="btn btn-outline" style="width: 100%; justify-content: center; border: 1px dashed var(--soft-rose); color: var(--muted-text); font-size: 0.85rem;">
-          <span>📋 Chỉ Sao Chép Lời Nhắn Này</span>
+        <button id="copyThankTextBtn" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.9rem;">
+          <span>📋 Sao Chép Lời Nhắn Này</span>
         </button>
       </div>
     </div>
@@ -291,7 +281,7 @@
 
   <!-- Thư viện tạo mã QR offline 100% -->
   <script src="qrcode.min.js"></script>
-  <!-- Cache-busting v=3.6 -->
-  <script src="script.js?v=3.6"></script>
+  <!-- Cache-busting v=3.7 -->
+  <script src="script.js?v=3.7"></script>
 </body>
 </html>

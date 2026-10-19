@@ -36,15 +36,13 @@ if (!currentInboxCode) {
   localStorage.setItem('thiep_inbox_code', currentInboxCode);
 }
 
-// DOM Elements
 const recipientNameInput = document.getElementById('recipientName');
 const senderNameInput = document.getElementById('senderName');
 const wishChips = document.querySelectorAll('.wish-chip');
 const customWishText = document.getElementById('customWishText');
-const senderZalo = document.getElementById('senderZalo');
-const senderMess = document.getElementById('senderMess');
 const inboxCodeInput = document.getElementById('inboxCodeInput');
 const openInboxLinkBtn = document.getElementById('openInboxLinkBtn');
+const copyInboxBtn = document.getElementById('copyInboxBtn');
 
 const resultUrlInput = document.getElementById('resultUrlInput');
 const copyUrlBtn = document.getElementById('copyUrlBtn');
@@ -115,8 +113,6 @@ function buildPersonalizedUrl() {
   const from = senderNameInput ? senderNameInput.value.trim() : '';
   const wishContent = customWishText ? customWishText.value.trim() : '';
   const defaultWish = UNIVERSAL_WISHES[selectedWishIdx].wish.trim();
-  const zalo = senderZalo ? senderZalo.value.trim() : '';
-  const mess = senderMess ? senderMess.value.trim() : '';
   
   const params = new URLSearchParams();
   if (to) params.set('to', to);
@@ -129,9 +125,7 @@ function buildPersonalizedUrl() {
     params.set('wish', selectedWishIdx.toString());
   }
 
-  // Cấu hình đích nhận lời cảm ơn
-  if (zalo) params.set('zalo', zalo);
-  if (mess) params.set('mess', mess);
+  // Cấu hình đích nhận lời cảm ơn: Hộp Thư Bí Mật riêng
   if (currentInboxCode) params.set('inbox', currentInboxCode);
 
   const query = params.toString();
@@ -206,12 +200,10 @@ if (customWishText) {
   customWishText.addEventListener('input', updateOutputs);
 }
 
-if (senderZalo) {
-  senderZalo.addEventListener('input', updateOutputs);
-}
-
-if (senderMess) {
-  senderMess.addEventListener('input', updateOutputs);
+if (copyInboxBtn && inboxCodeInput) {
+  copyInboxBtn.addEventListener('click', () => {
+    copyToClipboard(inboxCodeInput.value, "Đã sao chép link Hộp Thư Bí Mật của bạn! Hãy lưu lại để mở xem tin nhắn nhé 📬", "📬");
+  });
 }
 
 wishChips.forEach(chip => {

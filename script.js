@@ -56,8 +56,6 @@ let isEnvelopeOpened = false;
 
 // Tùy biến lời chúc & Nơi nhận lời cảm ơn
 let customWishText = '';
-let creatorZalo = '';
-let creatorMess = '';
 let creatorInbox = '';
 
 // Dữ liệu ảnh người dùng tải lên
@@ -109,11 +107,8 @@ const closeThankModalBtn = document.getElementById('closeThankModalBtn');
 const thankModalTitle = document.getElementById('thankModalTitle');
 const thankMessageInput = document.getElementById('thankMessageInput');
 const thankChips = document.querySelectorAll('#thankTemplateSelector .wish-chip');
-const sendZaloActionBtn = document.getElementById('sendZaloActionBtn');
-const sendZaloBtnText = document.getElementById('sendZaloBtnText');
-const sendMessActionBtn = document.getElementById('sendMessActionBtn');
-const sendMessBtnText = document.getElementById('sendMessBtnText');
 const sendInboxActionBtn = document.getElementById('sendInboxActionBtn');
+const sendInboxBtnText = document.getElementById('sendInboxBtnText');
 const copyThankTextBtn = document.getElementById('copyThankTextBtn');
 
 // Share Hub Elements
@@ -311,8 +306,6 @@ function initFromURL() {
     customWishText = decodeURIComponent(msgParam).trim();
   }
 
-  creatorZalo = urlParams.get('zalo') || '';
-  creatorMess = urlParams.get('mess') || '';
   creatorInbox = urlParams.get('inbox') || '';
 
   const photoParam = urlParams.get('photo') || urlParams.get('img');
@@ -634,28 +627,8 @@ function openThankYouModal() {
     thankMessageInput.value = templates[0];
   }
 
-  // Cập nhật cấu hình nút gửi Zalo
-  if (creatorZalo && sendZaloBtnText) {
-    sendZaloBtnText.textContent = `💬 Gửi Thẳng Qua Zalo (${creatorZalo})`;
-  } else if (sendZaloBtnText) {
-    sendZaloBtnText.textContent = "💬 Gửi Lời Cảm Ơn Qua Zalo";
-  }
-
-  // Cập nhật nút Messenger
-  if (creatorMess && sendMessActionBtn) {
-    sendMessActionBtn.classList.remove('hidden');
-    if (sendMessBtnText) {
-      sendMessBtnText.textContent = `💙 Gửi Qua Messenger Của ${who}`;
-    }
-  } else if (sendMessActionBtn) {
-    sendMessActionBtn.classList.add('hidden');
-  }
-
-  // Cập nhật nút Hộp thư bí mật
-  if (creatorInbox && sendInboxActionBtn) {
-    sendInboxActionBtn.classList.remove('hidden');
-  } else if (sendInboxActionBtn) {
-    sendInboxActionBtn.classList.add('hidden');
+  if (sendInboxBtnText) {
+    sendInboxBtnText.textContent = `💌 Gửi Vào Hộp Thư Bí Mật Của ${who}`;
   }
 
   if (thankYouModal) {
@@ -685,63 +658,40 @@ if (thankChips) {
   });
 }
 
-// Hành động gửi Zalo
-if (sendZaloActionBtn) {
-  sendZaloActionBtn.addEventListener('click', () => {
-    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
-    const cleanZalo = creatorZalo ? creatorZalo.replace(/[^0-9]/g, '') : '';
-    copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy dán vào Zalo nhé 💌", "💬");
-    triggerRoseRain();
-    closeThankYouModal();
-    setTimeout(() => {
-      if (cleanZalo) {
-        window.open(`https://zalo.me/${cleanZalo}`, '_blank');
-      } else {
-        window.open('https://chat.zalo.me/', '_blank');
-      }
-    }, 400);
-  });
-}
-
-// Hành động gửi Messenger
-if (sendMessActionBtn) {
-  sendMessActionBtn.addEventListener('click', () => {
-    const text = thankMessageInput ? thankMessageInput.value.trim() : '';
-    copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy dán vào Messenger nhé 💌", "💙");
-    triggerRoseRain();
-    closeThankYouModal();
-    let messUrl = creatorMess.trim();
-    if (!messUrl.startsWith('http://') && !messUrl.startsWith('https://')) {
-      if (messUrl.startsWith('m.me/')) {
-        messUrl = 'https://' + messUrl;
-      } else {
-        messUrl = 'https://m.me/' + messUrl;
-      }
-    }
-    setTimeout(() => {
-      window.open(messUrl, '_blank');
-    }, 400);
-  });
-}
-
 // Hành động gửi Hộp Thư Bí Mật (ntfy.sh)
 if (sendInboxActionBtn) {
   sendInboxActionBtn.addEventListener('click', async () => {
     const text = thankMessageInput ? thankMessageInput.value.trim() : '';
+    if (!text) {
+      showToast("Vui lòng nhập lời cảm ơn!", "⚠️");
+      return;
+    }
     const recipientTitle = customRecipientName ? `từ ${customRecipientName}` : "từ Người Nhận";
+    const senderTitle = customSenderName ? `gửi đến ${customSenderName}` : "";
+    const targetTopic = creatorInbox || 'hop-thu-2010-chung';
+
+    const originalText = sendInboxActionBtn.innerHTML;
+    sendInboxActionBtn.disabled = true;
+    sendInboxActionBtn.innerHTML = '<span>⏳ Đang gửi lời nhắn...</span>';
+
     try {
-      await fetch(`https://ntfy.sh/${creatorInbox}`, {
+      await fetch(`https://ntfy.sh/${targetTopic}`, {
         method: 'POST',
         body: text,
         headers: {
-          'Title': `💖 Lời cảm ơn 20/10 ${recipientTitle}`,
-          'Tags': 'heart,gift,blush'
+          'Title': `💖 Lời cảm ơn 20/10 ${recipientTitle} ${senderTitle}`.trim(),
+          'Tags': 'heart,gift,blush',
+          'Priority': 'default'
         }
       });
       showToast("Đã gửi lời cảm ơn vào Hộp Thư Bí Mật thành công! 💌", "💖");
     } catch (e) {
-      copyToClipboard(text, "Đã lưu lời cảm ơn! Hãy gửi qua Zalo nhé 💌", "💖");
+      copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy gửi cho người tặng nhé 💌", "💖");
+    } finally {
+      sendInboxActionBtn.disabled = false;
+      sendInboxActionBtn.innerHTML = originalText;
     }
+
     triggerRoseRain();
     closeThankYouModal();
   });
