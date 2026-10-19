@@ -1,0 +1,970 @@
+/* ==========================================================================
+   20/10 GREETING WEBSITE - MODERN STYLESHEET
+   Aesthetic: Romantic Rose Gold, Glassmorphism, Elegant Typography & Micro-animations
+   ========================================================================== */
+
+:root {
+  --primary-pink: #ff4d6d;
+  --primary-hover: #ff2a54;
+  --deep-rose: #c9184a;
+  --soft-rose: #ff8fa3;
+  --light-blush: #fff0f3;
+  --accent-gold: #ffb703;
+  --gold-glow: rgba(255, 183, 3, 0.4);
+  --dark-text: #2b1118;
+  --muted-text: #6c585c;
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-shadow: 0 16px 40px rgba(201, 24, 74, 0.12);
+  --card-radius: 24px;
+  --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --font-main: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-script: 'Dancing Script', cursive;
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 40%, #ffb3c6 70%, #ff8fa3 100%);
+  background-attachment: fixed;
+  color: var(--dark-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background Canvas for Falling Petals & Hearts */
+#petalCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--deep-rose);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 6px 14px;
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(255, 77, 109, 0.15);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-pink);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 77, 109, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid var(--soft-rose);
+  color: var(--deep-rose);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.icon-btn:hover {
+  background: var(--light-blush);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 77, 109, 0.2);
+}
+
+.share-btn {
+  background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+  color: white;
+  border: none;
+}
+.share-btn:hover {
+  background: linear-gradient(135deg, var(--primary-hover), #a01038);
+  color: white;
+}
+
+/* Sound Wave Animation */
+.music-waves {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  margin-left: 4px;
+}
+.music-waves span {
+  width: 3px;
+  height: 100%;
+  background: var(--deep-rose);
+  border-radius: 2px;
+  animation: wave 1.2s ease-in-out infinite alternate;
+}
+.music-waves span:nth-child(2) { animation-delay: 0.3s; }
+.music-waves span:nth-child(3) { animation-delay: 0.6s; }
+.music-waves.paused span {
+  animation: none;
+  height: 3px;
+}
+
+@keyframes wave {
+  0% { height: 3px; }
+  100% { height: 14px; }
+}
+
+/* Main Container */
+.main-wrapper {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Glassmorphism Panel Common Style */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  padding: 32px 28px;
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition-smooth);
+}
+
+.glass-panel:hover {
+  box-shadow: 0 20px 50px rgba(201, 24, 74, 0.18);
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  padding: 20px 10px 10px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--deep-rose);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 20px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 15px rgba(255, 77, 109, 0.15);
+  animation: floatTag 3s ease-in-out infinite;
+}
+
+@keyframes floatTag {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  color: var(--dark-text);
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.highlight-text {
+  background: linear-gradient(135deg, #c9184a 0%, #ff4d6d 50%, #ff758f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  text-shadow: 0 2px 20px rgba(255, 77, 109, 0.2);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--muted-text);
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Section Title */
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--deep-rose);
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+/* Customizer Card (Role & Name input) */
+.role-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.role-chip {
+  background: white;
+  border: 1.5px solid rgba(255, 77, 109, 0.25);
+  color: var(--dark-text);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.role-chip:hover {
+  border-color: var(--primary-pink);
+  background: var(--light-blush);
+  transform: translateY(-2px);
+}
+
+.role-chip.active {
+  background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(255, 77, 109, 0.35);
+  transform: scale(1.04);
+}
+
+.recipient-input-group {
+  display: flex;
+  gap: 12px;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.input-wrapper {
+  flex: 1;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 143, 163, 0.5);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--dark-text);
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.input-wrapper input:focus {
+  border-color: var(--primary-pink);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.2);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 14px 24px;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition-smooth);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-pink) 0%, var(--deep-rose) 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 77, 109, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #a01038 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(255, 77, 109, 0.45);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--deep-rose);
+  border: 1.5px solid var(--soft-rose);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.btn-secondary:hover {
+  background: var(--light-blush);
+  border-color: var(--primary-pink);
+  transform: translateY(-2px);
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #f72585, #7209b7);
+  color: white;
+  box-shadow: 0 6px 20px rgba(114, 9, 183, 0.3);
+}
+
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(114, 9, 183, 0.45);
+}
+
+.btn-sm {
+  padding: 9px 16px;
+  font-size: 0.88rem;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--deep-rose);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+}
+
+.share-notice {
+  margin-top: 18px;
+  text-align: center;
+  background: #fff5f7;
+  border: 1px dashed var(--soft-rose);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--deep-rose);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   INTERACTIVE ENVELOPE (PHONG BÌ MỞ THIỆP)
+   ========================================================================== */
+.envelope-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.envelope-container {
+  width: 100%;
+  max-width: 620px;
+  min-height: 480px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  height: 360px;
+  background: #f7a5b5;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px rgba(193, 18, 65, 0.28);
+  transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+  margin-top: 40px;
+}
+
+/* Nắp phong bì (Flap) */
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 290px solid transparent;
+  border-right: 290px solid transparent;
+  border-top: 180px solid #e05777;
+  transform-origin: top;
+  transition: transform 0.6s ease-in-out, z-index 0.3s;
+  z-index: 5;
+}
+
+/* Túi phong bì phía trước */
+.envelope-pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 290px solid #f88c9e;
+  border-right: 290px solid #f88c9e;
+  border-bottom: 200px solid #f2738a;
+  border-top: 160px solid transparent;
+  border-radius: 0 0 12px 12px;
+  z-index: 3;
+}
+
+/* Con dấu sáp (Wax Seal) */
+.wax-seal {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, #ff2a54, #b5173f);
+  border: 4px solid #ff758f;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(181, 23, 63, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.5);
+  transition: var(--transition-smooth);
+  animation: sealGlow 2.5s infinite;
+}
+
+@keyframes sealGlow {
+  0%, 100% { box-shadow: 0 8px 24px rgba(181, 23, 63, 0.6), 0 0 15px rgba(255, 183, 3, 0.5); }
+  50% { box-shadow: 0 12px 30px rgba(181, 23, 63, 0.9), 0 0 28px rgba(255, 183, 3, 0.85); }
+}
+
+.wax-seal:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.seal-heart {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.seal-text {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-top: 3px;
+}
+
+/* Tờ thư bên trong (Letter Paper) */
+.letter-paper {
+  position: absolute;
+  top: 30px;
+  left: 5%;
+  width: 90%;
+  min-height: 380px;
+  background: #fffdfa;
+  border: 2px solid #fae1dd;
+  border-radius: 16px;
+  padding: 30px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.4s, opacity 0.5s;
+  opacity: 0.95;
+  transform: translateY(20px) scale(0.95);
+  background-image: radial-gradient(#ffe5ec 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.letter-decor {
+  text-align: center;
+  color: var(--soft-rose);
+  letter-spacing: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.letter-header {
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 1.5px dashed #fcd5ce;
+  padding-bottom: 15px;
+}
+
+.letter-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--deep-rose);
+  background: #ffe5ec;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.recipient-greeting {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  color: var(--deep-rose);
+  font-weight: 700;
+}
+
+.letter-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #3d2b2f;
+  margin-bottom: 25px;
+}
+
+.wish-text {
+  font-family: var(--font-main);
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+.quote-text {
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  color: var(--deep-rose);
+  text-align: center;
+  line-height: 1.4;
+  margin-top: 15px;
+  padding: 10px 14px;
+  background: rgba(255, 229, 236, 0.4);
+  border-radius: 12px;
+}
+
+.letter-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #fae1dd;
+  padding-top: 14px;
+  margin-bottom: 20px;
+}
+
+.letter-signature {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--muted-text);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-tag {
+  font-weight: 600;
+  color: var(--deep-rose);
+  font-style: normal;
+}
+
+.letter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Envelope OPEN STATE */
+.envelope.is-open {
+  height: auto;
+  min-height: 520px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.envelope.is-open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope.is-open .envelope-pocket {
+  opacity: 0.2;
+  transition: opacity 0.5s;
+}
+
+.envelope.is-open .wax-seal {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.envelope.is-open .letter-paper {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(0) scale(1);
+  z-index: 10;
+  opacity: 1;
+  box-shadow: 0 20px 50px rgba(201, 24, 74, 0.2);
+}
+
+.envelope-hint {
+  margin-top: 16px;
+  font-size: 0.92rem;
+  color: var(--deep-rose);
+  font-weight: 600;
+  text-align: center;
+  animation: bounceHint 2s infinite;
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ==========================================================================
+   FORTUNE CARDS (RÚT THÔNG ĐIỆP MAY MẮN 20/10)
+   ========================================================================== */
+.fortune-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.section-desc {
+  font-size: 0.98rem;
+  color: var(--muted-text);
+}
+
+.fortune-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.fortune-card {
+  height: 200px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(201, 24, 74, 0.12);
+}
+
+.fortune-card.flipped .card-inner,
+.fortune-card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #ffffff, #fff0f3);
+  border: 2px solid rgba(255, 143, 163, 0.4);
+}
+
+.card-front .box-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 4px 6px rgba(255, 77, 109, 0.2));
+}
+
+.card-front h4 {
+  font-size: 1.05rem;
+  color: var(--deep-rose);
+  margin-bottom: 4px;
+}
+
+.card-front p {
+  font-size: 0.8rem;
+  color: var(--muted-text);
+}
+
+.card-back {
+  background: linear-gradient(135deg, var(--deep-rose), var(--primary-pink));
+  color: white;
+  transform: rotateY(180deg);
+  border: 2px solid white;
+}
+
+.card-back .result-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.card-back .result-text {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   PHOTO FRAME SECTION
+   ========================================================================== */
+.frame-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.frame-wrapper {
+  position: relative;
+  background: white;
+  padding: 16px 16px 24px;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(201, 24, 74, 0.18);
+  transform: rotate(-1.5deg);
+  transition: var(--transition-smooth);
+}
+
+.frame-wrapper:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.frame-wrapper img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+.frame-caption {
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: 1.4rem;
+  color: var(--deep-rose);
+}
+
+.frame-controls h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--deep-rose);
+  margin-bottom: 12px;
+}
+
+.frame-controls p {
+  font-size: 0.95rem;
+  color: var(--muted-text);
+  margin-bottom: 18px;
+}
+
+.upload-label {
+  display: inline-flex;
+  cursor: pointer;
+  margin-right: 12px;
+  margin-bottom: 10px;
+}
+
+/* Page Footer */
+.page-footer {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.footer-blessing {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--deep-rose);
+  margin-bottom: 24px;
+}
+
+.footer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.copyright {
+  font-size: 0.85rem;
+  color: var(--muted-text);
+}
+
+/* Toast Message */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(30, 10, 18, 0.92);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Screen Reader Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Tối ưu hoàn hảo cho Mobile)
+   ========================================================================== */
+@media (max-width: 680px) {
+  .main-wrapper {
+    padding: 16px 14px 60px;
+    gap: 28px;
+  }
+
+  .top-nav {
+    padding: 10px 14px;
+  }
+
+  .brand-badge {
+    font-size: 0.72rem;
+    padding: 5px 10px;
+  }
+
+  .icon-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+
+  .glass-panel {
+    padding: 24px 18px;
+  }
+
+  .recipient-input-group {
+    flex-direction: column;
+  }
+
+  .envelope-flap {
+    border-left-width: 160px;
+    border-right-width: 160px;
+    border-top-width: 110px;
+  }
+
+  .envelope-pocket {
+    border-left-width: 160px;
+    border-right-width: 160px;
+    border-bottom-width: 130px;
+    border-top-width: 100px;
+  }
+
+  .envelope {
+    max-width: 320px;
+    height: 230px;
+  }
+
+  .wax-seal {
+    top: 100px;
+    width: 75px;
+    height: 75px;
+  }
+
+  .letter-paper {
+    padding: 20px 14px;
+  }
+
+  .recipient-greeting {
+    font-size: 1.35rem;
+  }
+
+  .quote-text {
+    font-size: 1.25rem;
+  }
+
+  .frame-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .fortune-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .fortune-card {
+    height: 175px;
+  }
+}
