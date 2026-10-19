@@ -787,17 +787,26 @@ if (copyZaloMsgBtn) {
 // 8. RÚT THÔNG ĐIỆP MAY MẮN (FORTUNE CARDS)
 // ==========================================
 document.querySelectorAll('.fortune-card').forEach(card => {
-  card.addEventListener('click', () => {
-    card.classList.toggle('flipped');
-    launchConfetti(25);
-    const fortuneMsg = card.getAttribute('data-fortune');
-    if (card.classList.contains('flipped') && fortuneMsg) {
-      showToast(fortuneMsg, "🎁");
+  card.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isFlipped = card.classList.contains('flipped');
+    
+    if (!isFlipped) {
+      card.classList.add('flipped');
+      playChimeEffect();
+      launchConfetti(30);
+      const fortuneMsg = card.getAttribute('data-fortune');
+      if (fortuneMsg) {
+        showToast(fortuneMsg, "🎁");
+      }
+    } else {
+      card.classList.remove('flipped');
     }
   });
 
   card.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
       card.click();
     }
   });
