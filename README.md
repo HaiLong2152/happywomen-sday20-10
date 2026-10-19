@@ -72,9 +72,34 @@ Nếu máy bạn đã có Node.js:
 
 ---
 
-## 🎁 Cách Gửi Link Cho Người Nhận
-Sau khi deploy có link web, bạn có thể:
-1. Mở web -> Nhập tên người nhận (ví dụ: **Lan Anh**) -> Chọn đối tượng (**Vợ / Người Yêu**).
-2. Bấm nút **"Sao chép link gửi Zalo"**.
-3. Gửi link vừa copy cho họ. Khi họ mở ra, màn hình sẽ hiển thị: *"Gửi: Lan Anh ❤️"* kèm lời chúc ngọt ngào nhất!
+## 🎁 Hướng Dẫn Gửi Thiệp Cho Từng Người (Chế Độ Người Nhận Riêng Biệt)
+
+Hệ thống được thiết kế thông minh với 2 chế độ:
+
+### 1. Dành cho người nhận (Chỉ xem & cảm nhận - Không chọn role):
+Khi người nhận bấm vào link bạn gửi (có chứa tham số `?role=...` hoặc `?to=...`):
+- **Hoàn toàn ẩn bộ chọn vai trò**: Người nhận không hề thấy các nút chọn Mẹ, Vợ, Cô giáo... hay ô nhập tên.
+- **Trải nghiệm cá nhân hóa 100%**:
+  - Tiêu đề thiệp gửi đúng tên/đối tượng (VD: *Gửi: Mẹ Kính Yêu ❤️* hoặc *Gửi: Lan Anh 💖*).
+  - Chạm vào con dấu sáp đỏ để mở thiệp: phát giai điệu lãng mạn, bung pháo hoa và cánh hoa rơi.
+  - Lời chúc và trích dẫn chuẩn mực theo đúng mối quan hệ.
+  - Rút quẻ thông điệp may mắn 20/10.
+  - Bắn pháo hoa kỷ niệm và bật nhạc nền.
+
+---
+
+### 2. Dành cho bạn (Người gửi - Trung tâm tạo & điều phối link):
+Khi bạn mở trang web gốc (không có tham số):
+- **Cách 1 - Lấy link nhanh theo vai trò (1 chạm):**
+  - 👩 **Mẹ Kính Yêu**: `?role=mother`
+  - 💖 **Vợ / Người Yêu**: `?role=lover`
+  - 👧 **Chị / Em Gái**: `?role=sister`
+  - 👩‍🏫 **Cô Giáo**: `?role=teacher`
+  - 💼 **Bạn Bè / Đồng Nghiệp**: `?role=colleague`
+  - Mỗi thẻ có sẵn nút **[📋 Sao Chép Link]**, nút **[💬 Copy Tin Nhắn Zalo]** (đã soạn sẵn lời chúc lịch sự kèm link) và nút **[👁️ Xem Thử]**.
+
+- **Cách 2 - Tạo link kèm tên riêng:**
+  - Chọn vai trò -> Nhập tên người nhận (VD: *Lan Anh, Mẹ Loan, Em Thảo...*) -> Chọn mẫu lời chúc.
+  - Hệ thống tự sinh link: `?role=lover&to=Lan+Anh` kèm mẫu tin nhắn Zalo gửi ngay.
+  - Có nút **[👁️ Xem Thử Thiệp Như Người Nhận Sẽ Thấy]** để bạn kiểm tra trước khi gửi.
 
