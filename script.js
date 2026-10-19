@@ -650,3 +650,4 @@ document.addEventListener('pointerdown', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   initFromURL();
 });
+

@@ -77,3 +77,4 @@ Sau khi deploy có link web, bạn có thể:
 1. Mở web -> Nhập tên người nhận (ví dụ: **Lan Anh**) -> Chọn đối tượng (**Vợ / Người Yêu**).
 2. Bấm nút **"Sao chép link gửi Zalo"**.
 3. Gửi link vừa copy cho họ. Khi họ mở ra, màn hình sẽ hiển thị: *"Gửi: Lan Anh ❤️"* kèm lời chúc ngọt ngào nhất!
+
