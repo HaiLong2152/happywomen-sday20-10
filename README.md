@@ -103,3 +103,25 @@ Khi bạn mở trang web gốc (không có tham số):
   - Hệ thống tự sinh link: `?role=lover&to=Lan+Anh` kèm mẫu tin nhắn Zalo gửi ngay.
   - Có nút **[👁️ Xem Thử Thiệp Như Người Nhận Sẽ Thấy]** để bạn kiểm tra trước khi gửi.
 
+- **Cách 3 - Mã QR 100% Offline (Quét Zalo / In thiệp & dán hộp quà):**
+  - Cả 5 vai trò nhanh và bộ tạo link tùy chỉnh đều tích hợp nút **[📱 Mã QR]** / khung QR trực quan.
+  - Bấm **[⬇️ Tải Ảnh QR (PNG)]** để lưu ảnh mã QR sắc nét về máy, dễ dàng in ra giấy kẹp vào bó hoa, dán hộp quà hoặc gửi qua Zalo/Facebook.
+  - Hoạt động hoàn toàn offline nhờ thư viện `qrcode.min.js`, không gửi dữ liệu ra ngoài, bảo mật và tốc độ tức thì.
+
+---
+
+## 💌 Trải Nghiệm Mở Thiệp Đỉnh Cao Cho Người Nhận
+
+Khi người nhận mở link (hoặc quét mã QR):
+1. **Hộp Thoại Chào Đón Tinh Tế (Welcome Photo):**
+   - Người nhận có thể chọn **tải ảnh chân dung/kỷ niệm của mình** lên để dán vào thiệp.
+   - Hoặc bấm **"Mở Thiệp Ngay"** nếu muốn xem trực tiếp mà không cần chọn ảnh.
+2. **Con Tem Bưu Chính Kỷ Niệm (Stamp):**
+   - Ảnh người nhận tải lên sẽ được thu nhỏ lồng vào con tem bưu chính mạ vàng ở góc bức thư bên trong phong bì và đồng bộ vào khung ảnh kỷ niệm.
+3. **Tự Động Phát Nhạc Du Dương:**
+   - Ngay khoảnh khắc người nhận bấm con dấu sáp đỏ `[MỞ THIỆP]`, bộ nhạc nền hộp nhạc (Music Box) sẽ tự động ngân vang nốt chuông êm dịu mà không bị trình duyệt chặn.
+4. **Hiệu Ứng Gõ Chữ Tay (Typewriter):**
+   - Từng dòng tâm thư ấm áp được viết ra tự nhiên như người gửi đang nắn nót từng chữ.
+5. **Nút 1-Chạm Gửi Lời Cảm Ơn:**
+   - Sau khi đọc thư, người nhận có thể bấm nút **[💖 Gửi Lời Cảm Ơn Đến Người Tặng]** để tự động copy lời cảm kích ngọt ngào và dán gửi lại cho bạn qua Zalo.
+

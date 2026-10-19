@@ -114,6 +114,33 @@ const previewBanner = document.getElementById('previewBanner');
 const previewTargetName = document.getElementById('previewTargetName');
 const exitPreviewBtn = document.getElementById('exitPreviewBtn');
 
+const welcomePhotoModal = document.getElementById('welcomePhotoModal');
+const closeWelcomeModalBtn = document.getElementById('closeWelcomeModalBtn');
+const welcomeRecipientName = document.getElementById('welcomeRecipientName');
+const photoUploadSlot = document.getElementById('photoUploadSlot');
+const slotIdle = document.getElementById('slotIdle');
+const slotPreview = document.getElementById('slotPreview');
+const welcomePreviewImg = document.getElementById('welcomePreviewImg');
+const welcomePhotoFileInput = document.getElementById('welcomePhotoFileInput');
+const confirmWelcomePhotoBtn = document.getElementById('confirmWelcomePhotoBtn');
+const skipWelcomePhotoBtn = document.getElementById('skipWelcomePhotoBtn');
+const recipientChangePhotoBtn = document.getElementById('recipientChangePhotoBtn');
+const recipientStamp = document.getElementById('recipientStamp');
+const stampImg = document.getElementById('stampImg');
+
+const qrModal = document.getElementById('qrModal');
+const closeQrModalBtn = document.getElementById('closeQrModalBtn');
+const qrModalTitle = document.getElementById('qrModalTitle');
+const qrModalDesc = document.getElementById('qrModalDesc');
+const qrCodeContainer = document.getElementById('qrCodeContainer');
+const qrTargetTag = document.getElementById('qrTargetTag');
+const downloadQrBtn = document.getElementById('downloadQrBtn');
+const copyQrLinkBtn = document.getElementById('copyQrLinkBtn');
+
+const builderQrCodeBox = document.getElementById('builderQrCodeBox');
+const downloadBuilderQrBtn = document.getElementById('downloadBuilderQrBtn');
+const enlargeBuilderQrBtn = document.getElementById('enlargeBuilderQrBtn');
+
 const brandBadgeText = document.getElementById('brandBadgeText');
 const navActionBtn = document.getElementById('navActionBtn');
 const navActionIcon = document.getElementById('navActionIcon');
@@ -144,6 +171,7 @@ const quoteContent = document.getElementById('quoteContent');
 const envelope = document.getElementById('envelope');
 const waxSeal = document.getElementById('waxSeal');
 const envelopeHint = document.getElementById('envelopeHint');
+const thankSenderBtn = document.getElementById('thankSenderBtn');
 const randomWishBtn = document.getElementById('randomWishBtn');
 const copyWishBtn = document.getElementById('copyWishBtn');
 const fireworksBtn = document.getElementById('fireworksBtn');
@@ -156,6 +184,7 @@ const resetPhotoBtn = document.getElementById('resetPhotoBtn');
 
 const footerBlessing = document.getElementById('footerBlessing');
 const recipientFooterCta = document.getElementById('recipientFooterCta');
+const recipientThankFooterBtn = document.getElementById('recipientThankFooterBtn');
 const recipientFireworksBtn = document.getElementById('recipientFireworksBtn');
 const openCreatorBtn = document.getElementById('openCreatorBtn');
 const senderFooterButtons = document.getElementById('senderFooterButtons');
@@ -169,6 +198,20 @@ const musicWaves = document.getElementById('musicWaves');
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toastMsg');
 const toastIcon = document.getElementById('toastIcon');
+
+// QR Code Instances
+let builderQrInstance = null;
+let modalQrInstance = null;
+let currentModalQrUrl = '';
+
+// Recipient Custom Photo
+let recipientPhotoData = null;
+try {
+  recipientPhotoData = sessionStorage.getItem('recipient_photo');
+} catch (e) {}
+
+// Typewriter state
+let typewriterTimeout = null;
 
 // ==========================================
 // 3. TIỆN ÍCH URL & SINH NỘI DUNG CHIA SẺ
@@ -310,17 +353,25 @@ function initFromURL() {
   updateWishDisplay();
   updatePhotoDisplay();
   updateBuilderOutputs();
+
+  // Kiểm tra hiển thị Modal chào đón ảnh nếu là Người Nhận
+  if (isRecipientMode && !isPreviewMode) {
+    checkWelcomePhotoModal();
+  }
 }
 
 // Cập nhật giao diện Người Nhận vs Người Gửi
 function applyModeDisplay() {
   if (isRecipientMode) {
     // CHẾ ĐỘ NGƯỜI NHẬN: ẨN TOÀN BỘ PHẦN CHỌN ROLE & TẠO THIỆP
+    document.body.classList.add('recipient-view-active');
+
     if (senderHubSection) senderHubSection.classList.add('hidden');
     if (randomWishBtn) randomWishBtn.classList.add('hidden');
     if (frameControls) frameControls.classList.add('hidden');
     if (senderFooterButtons) senderFooterButtons.classList.add('hidden');
     if (recipientFooterCta) recipientFooterCta.classList.remove('hidden');
+    if (thankSenderBtn) thankSenderBtn.classList.remove('hidden');
 
     // Nút trên thanh Menu tiện ích
     if (navActionIcon) navActionIcon.textContent = '✨';
@@ -353,11 +404,14 @@ function applyModeDisplay() {
     }
   } else {
     // CHẾ ĐỘ NGƯỜI TẠO (SENDER): HIỆN BẢNG TẠO LINK ĐỂ GỬI TỪNG NGƯỜI
+    document.body.classList.remove('recipient-view-active');
+
     if (senderHubSection) senderHubSection.classList.remove('hidden');
     if (randomWishBtn) randomWishBtn.classList.remove('hidden');
     if (frameControls) frameControls.classList.remove('hidden');
     if (senderFooterButtons) senderFooterButtons.classList.remove('hidden');
     if (recipientFooterCta) recipientFooterCta.classList.add('hidden');
+    if (thankSenderBtn) thankSenderBtn.classList.add('hidden');
     if (previewBanner) previewBanner.classList.add('hidden');
 
     if (navActionIcon) navActionIcon.textContent = '👁️';
@@ -387,6 +441,14 @@ function updateGreetingDisplay() {
       signatureSpan.textContent = "Với tất cả sự trân quý & yêu thương!";
     }
   }
+
+  // Cập nhật nút cảm ơn
+  if (thankSenderBtn) {
+    thankSenderBtn.innerHTML = `<span>💖 Gửi Lời Cảm Ơn ${senderName ? 'Đến ' + senderName : ''}</span>`;
+  }
+  if (recipientThankFooterBtn) {
+    recipientThankFooterBtn.innerHTML = `<span>💖 Gửi Lời Cảm Ơn ${senderName ? 'Đến ' + senderName : 'Đến Người Tặng'}</span>`;
+  }
 }
 
 // Cập nhật nội dung lời chúc & trích dẫn
@@ -398,14 +460,44 @@ function updateWishDisplay() {
 
 // Cập nhật hình ảnh theo vai trò
 function updatePhotoDisplay() {
+  if (recipientPhotoData) {
+    photoDisplay.src = recipientPhotoData;
+    if (stampImg) stampImg.src = recipientPhotoData;
+    photoCaption.textContent = `Khoảnh khắc rạng rỡ và đẹp nhất của ${customName || 'bạn'}! ✨`;
+    return;
+  }
+
   const roleData = WISHES_DATABASE[currentRole];
   if (roleData && roleData.photo) {
     photoDisplay.src = roleData.photo;
+    if (stampImg) stampImg.src = roleData.photo;
     photoCaption.textContent = roleData.caption;
   }
 }
 
-// Cập nhật kết quả sinh link & tin nhắn trong Builder Tab
+// Hiệu ứng chữ gõ tay từng dòng (Typewriter effect)
+function startTypewriterEffect(text) {
+  if (!wishContent) return;
+  if (typewriterTimeout) clearTimeout(typewriterTimeout);
+
+  wishContent.textContent = '';
+  wishContent.classList.add('typing-cursor');
+
+  let i = 0;
+  const speed = 20; // 20ms mỗi ký tự
+  function typeNext() {
+    if (i < text.length) {
+      wishContent.textContent += text.charAt(i);
+      i++;
+      typewriterTimeout = setTimeout(typeNext, speed);
+    } else {
+      wishContent.classList.remove('typing-cursor');
+    }
+  }
+  typeNext();
+}
+
+// Cập nhật kết quả sinh link, tin nhắn & mã QR trong Builder Tab
 function updateBuilderOutputs() {
   const roleKey = builderRole;
   const name = builderRecipientName ? builderRecipientName.value.trim() : '';
@@ -429,6 +521,113 @@ function updateBuilderOutputs() {
   if (zaloMessageContent) {
     zaloMessageContent.textContent = zaloMsg;
   }
+
+  // Vẽ Mã QR trực tiếp trong Builder
+  renderBuilderMiniQr(link);
+}
+
+// Vẽ Mã QR mini trong Builder
+function renderBuilderMiniQr(url) {
+  if (typeof QRCode === 'undefined' || !builderQrCodeBox) return;
+  builderQrCodeBox.innerHTML = '';
+  try {
+    builderQrInstance = new QRCode(builderQrCodeBox, {
+      text: url,
+      width: 130,
+      height: 130,
+      colorDark: "#c9184a",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch (err) {
+    // QRCode safe error handling
+  }
+}
+
+// Mở Modal Mã QR phóng to
+function openQrModal(url, roleTitle, targetName = '') {
+  currentModalQrUrl = url;
+  const displayName = targetName || roleTitle;
+  if (qrModalTitle) qrModalTitle.textContent = `Mã QR Thiệp: ${displayName}`;
+  if (qrTargetTag) qrTargetTag.textContent = `Gửi: ${displayName} ❤️`;
+
+  if (qrCodeContainer && typeof QRCode !== 'undefined') {
+    qrCodeContainer.innerHTML = '';
+    modalQrInstance = new QRCode(qrCodeContainer, {
+      text: url,
+      width: 200,
+      height: 200,
+      colorDark: "#b5173f",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+
+  if (qrModal) qrModal.classList.remove('hidden');
+}
+
+// Tải ảnh mã QR về máy (PNG)
+function downloadQrFromElement(containerEl, fileName = "thiep-20-10-qr.png") {
+  if (!containerEl) return;
+  const canvas = containerEl.querySelector('canvas');
+  if (canvas) {
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = dataUrl;
+    link.click();
+    showToast("Đã tải ảnh mã QR thành công! Hãy in hoặc dán thiệp hoa nhé 🌸", "🖼️");
+  } else {
+    const img = containerEl.querySelector('img');
+    if (img && img.src) {
+      const link = document.createElement('a');
+      link.download = fileName;
+      link.href = img.src;
+      link.click();
+      showToast("Đã tải ảnh mã QR thành công!", "🖼️");
+    } else {
+      showToast("Đang tạo mã QR, vui lòng thử lại sau giây lát!", "⚠️");
+    }
+  }
+}
+
+// Kiểm tra hiển thị Modal Chào Đón & Đính Kèm Ảnh
+function checkWelcomePhotoModal() {
+  try {
+    const handled = sessionStorage.getItem('welcome_handled');
+    if (handled || recipientPhotoData) return;
+
+    if (welcomeRecipientName) {
+      welcomeRecipientName.textContent = customName || (WISHES_DATABASE[currentRole] ? WISHES_DATABASE[currentRole].shortRole : "Bạn");
+    }
+    if (welcomePhotoModal) {
+      welcomePhotoModal.classList.remove('hidden');
+    }
+  } catch (e) {}
+}
+
+// Áp dụng ảnh người nhận tải lên
+function applyRecipientPhoto(dataUrl) {
+  recipientPhotoData = dataUrl;
+  try {
+    sessionStorage.setItem('recipient_photo', dataUrl);
+  } catch (e) {}
+
+  if (photoDisplay) photoDisplay.src = dataUrl;
+  if (stampImg) stampImg.src = dataUrl;
+  if (photoCaption) photoCaption.textContent = `Khoảnh khắc rạng rỡ và đẹp nhất của ${customName || 'bạn'}! ✨`;
+  showToast("Đã đính kèm ảnh của bạn vào thiệp chúc mừng!", "📷");
+}
+
+// Gửi lời cảm ơn người tặng
+function sendThankYouMessage() {
+  const who = senderName ? senderName : "bạn";
+  const thankText = senderName
+    ? `💖 Cảm ơn ${senderName} rất nhiều! Tấm thiệp 20/10 thật đẹp, bất ngờ và xúc động. Chúc ${senderName} luôn nhiều niềm vui và hạnh phúc nhé! 🥰`
+    : `💖 Cảm ơn bạn rất nhiều! Tấm thiệp 20/10 thật đẹp, ngọt ngào và xúc động. Mình rất vui và hạnh phúc khi nhận được món quà này! 🥰`;
+
+  copyToClipboard(thankText, `✨ Đã sao chép lời cảm ơn! Hãy dán gửi lại cho ${who} qua Zalo nhé 💌`, "💖");
+  launchConfetti(80);
 }
 
 // Chuyển sang xem thử thiệp người nhận
@@ -510,6 +709,15 @@ document.querySelectorAll('.copy-role-msg-btn').forEach(btn => {
   });
 });
 
+document.querySelectorAll('.show-role-qr-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const role = btn.getAttribute('data-role');
+    const url = generateUrl(role);
+    const roleTitle = WISHES_DATABASE[role] ? WISHES_DATABASE[role].title : role;
+    openQrModal(url, roleTitle, '');
+  });
+});
+
 document.querySelectorAll('.preview-role-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const role = btn.getAttribute('data-role');
@@ -581,6 +789,121 @@ if (previewCustomCardBtn) {
   });
 }
 
+// Các nút QR trong Builder
+if (downloadBuilderQrBtn) {
+  downloadBuilderQrBtn.addEventListener('click', () => {
+    const targetName = builderRecipientName.value.trim() || 'thiep-20-10';
+    downloadQrFromElement(builderQrCodeBox, `ma-qr-${targetName}.png`);
+  });
+}
+
+if (enlargeBuilderQrBtn) {
+  enlargeBuilderQrBtn.addEventListener('click', () => {
+    const link = generatedLinkInput.value;
+    const name = builderRecipientName.value.trim();
+    const roleTitle = WISHES_DATABASE[builderRole] ? WISHES_DATABASE[builderRole].title : builderRole;
+    openQrModal(link, roleTitle, name);
+  });
+}
+
+// Modal QR Controls
+if (closeQrModalBtn) {
+  closeQrModalBtn.addEventListener('click', () => {
+    if (qrModal) qrModal.classList.add('hidden');
+  });
+}
+
+if (downloadQrBtn) {
+  downloadQrBtn.addEventListener('click', () => {
+    downloadQrFromElement(qrCodeContainer, "ma-qr-thiep-20-10.png");
+  });
+}
+
+if (copyQrLinkBtn) {
+  copyQrLinkBtn.addEventListener('click', () => {
+    if (currentModalQrUrl) {
+      copyToClipboard(currentModalQrUrl, "Đã sao chép link quét mã QR!", "🔗");
+    }
+  });
+}
+
+// Modal Chào Đón & Đính Kèm Ảnh Người Nhận
+let selectedTempPhotoUrl = null;
+
+if (photoUploadSlot) {
+  photoUploadSlot.addEventListener('click', () => {
+    if (welcomePhotoFileInput) welcomePhotoFileInput.click();
+  });
+
+  photoUploadSlot.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (welcomePhotoFileInput) welcomePhotoFileInput.click();
+    }
+  });
+}
+
+if (welcomePhotoFileInput) {
+  welcomePhotoFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        selectedTempPhotoUrl = evt.target.result;
+        if (welcomePreviewImg) welcomePreviewImg.src = selectedTempPhotoUrl;
+        if (slotIdle) slotIdle.classList.add('hidden');
+        if (slotPreview) slotPreview.classList.remove('hidden');
+        if (confirmWelcomePhotoBtn) confirmWelcomePhotoBtn.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+if (confirmWelcomePhotoBtn) {
+  confirmWelcomePhotoBtn.addEventListener('click', () => {
+    if (selectedTempPhotoUrl) {
+      applyRecipientPhoto(selectedTempPhotoUrl);
+    }
+    try {
+      sessionStorage.setItem('welcome_handled', 'true');
+    } catch (e) {}
+
+    if (welcomePhotoModal) welcomePhotoModal.classList.add('hidden');
+    setTimeout(() => {
+      openEnvelope();
+    }, 400);
+  });
+}
+
+function dismissWelcomeModal() {
+  try {
+    sessionStorage.setItem('welcome_handled', 'true');
+  } catch (e) {}
+  if (welcomePhotoModal) welcomePhotoModal.classList.add('hidden');
+}
+
+if (skipWelcomePhotoBtn) {
+  skipWelcomePhotoBtn.addEventListener('click', dismissWelcomeModal);
+}
+
+if (closeWelcomeModalBtn) {
+  closeWelcomeModalBtn.addEventListener('click', dismissWelcomeModal);
+}
+
+if (recipientChangePhotoBtn) {
+  recipientChangePhotoBtn.addEventListener('click', () => {
+    if (imageUploadInput) imageUploadInput.click();
+  });
+}
+
+// Nút Cảm Ơn
+if (thankSenderBtn) {
+  thankSenderBtn.addEventListener('click', sendThankYouMessage);
+}
+if (recipientThankFooterBtn) {
+  recipientThankFooterBtn.addEventListener('click', sendThankYouMessage);
+}
+
 // Nút Thoát Xem Trước
 if (exitPreviewBtn) {
   exitPreviewBtn.addEventListener('click', exitPreview);
@@ -629,9 +952,17 @@ function openEnvelope() {
   envelope.classList.add('is-open');
   envelopeHint.textContent = "💖 Thiệp chúc đã được mở ra với trọn vẹn yêu thương!";
   
-  // Hiệu ứng âm thanh và pháo hoa
+  // Tự động phát nhạc nền nhẹ nhàng
+  toggleBackgroundMusic(true);
+
+  // Hiệu ứng âm thanh chuông và pháo hoa giấy
   playChimeEffect();
   launchConfetti(80);
+
+  // Hiệu ứng chữ gõ tay nắn nót
+  const roleData = WISHES_DATABASE[currentRole];
+  const fullWish = roleData.wishes[currentWishIndex % roleData.wishes.length];
+  startTypewriterEffect(fullWish);
 }
 
 if (waxSeal) {
@@ -705,8 +1036,7 @@ if (imageUploadInput) {
     if (file) {
       const reader = new FileReader();
       reader.onload = function(evt) {
-        photoDisplay.src = evt.target.result;
-        showToast("Đã cập nhật ảnh kỷ niệm thành công!", "🖼️");
+        applyRecipientPhoto(evt.target.result);
       };
       reader.readAsDataURL(file);
     }
@@ -715,6 +1045,10 @@ if (imageUploadInput) {
 
 if (resetPhotoBtn) {
   resetPhotoBtn.addEventListener('click', () => {
+    recipientPhotoData = null;
+    try {
+      sessionStorage.removeItem('recipient_photo');
+    } catch (e) {}
     updatePhotoDisplay();
     if (imageUploadInput) imageUploadInput.value = '';
     showToast("Đã đặt lại ảnh mặc định theo vai trò!", "🌸");
@@ -786,8 +1120,16 @@ function playChimeEffect() {
   });
 }
 
-function toggleBackgroundMusic() {
+function toggleBackgroundMusic(forcePlay = null) {
   initAudio();
+  if (forcePlay === true) {
+    if (isMusicPlaying) return;
+    isMusicPlaying = false; // will be toggled to true below
+  } else if (forcePlay === false) {
+    if (!isMusicPlaying) return;
+    isMusicPlaying = true; // will be toggled to false below
+  }
+
   isMusicPlaying = !isMusicPlaying;
 
   if (isMusicPlaying) {

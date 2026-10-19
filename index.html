@@ -31,6 +31,72 @@
     </div>
   </div>
 
+  <!-- Modal 1: Chào Đón & Đính Kèm Ảnh Cho Người Nhận (Tùy Chọn) -->
+  <div id="welcomePhotoModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-photo-backdrop"></div>
+    <div class="welcome-photo-card glass-panel">
+      <button id="closeWelcomeModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
+      <div class="welcome-badge">🌸 MÓN QUÀ 20/10 ĐẶC BIỆT 🌸</div>
+      <h3 class="welcome-title" id="welcomeTitle">Dành Riêng Cho <span id="welcomeRecipientName">Bạn</span>!</h3>
+      <p class="welcome-subtitle">
+        Có một bức thiệp yêu thương đang chờ bạn mở. Bạn có muốn đính kèm một bức ảnh xinh đẹp của mình lên bức thiệp này không?
+      </p>
+
+      <div class="photo-upload-slot" id="photoUploadSlot" tabindex="0">
+        <div class="slot-idle" id="slotIdle">
+          <span class="slot-camera-icon">📷</span>
+          <span class="slot-text">Chạm vào đây để chọn ảnh của bạn</span>
+          <span class="slot-subtext">(Ảnh chân dung, nụ cười rạng rỡ của bạn)</span>
+        </div>
+        <div class="slot-preview hidden" id="slotPreview">
+          <img id="welcomePreviewImg" src="" alt="Ảnh bạn đã chọn">
+          <span class="slot-change-hint">Chạm để đổi ảnh khác</span>
+        </div>
+        <input type="file" id="welcomePhotoFileInput" accept="image/*" class="sr-only">
+      </div>
+
+      <div class="welcome-actions">
+        <button id="confirmWelcomePhotoBtn" class="btn btn-primary hidden">
+          <span>✨ Dán Ảnh Này & Mở Thiệp</span>
+        </button>
+        <button id="skipWelcomePhotoBtn" class="btn btn-secondary">
+          <span>🌸 Mở Thiệp Ngay (Không Dùng Ảnh)</span>
+        </button>
+      </div>
+      <p class="welcome-note">*(Bạn vẫn có thể thêm hoặc đổi ảnh bất cứ lúc nào khi xem thiệp)*</p>
+    </div>
+  </div>
+
+  <!-- Modal 2: Hiển Thị & Tải Mã QR Thiệp Chúc Mừng -->
+  <div id="qrModal" class="qr-modal hidden" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="qr-modal-backdrop"></div>
+    <div class="qr-modal-card glass-panel">
+      <button id="closeQrModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
+      <div class="qr-badge">📱 QUÉT MÃ MỞ THIỆP 20/10</div>
+      <h3 class="qr-modal-title" id="qrModalTitle">Mã QR Thiệp Chúc Mừng</h3>
+      <p class="qr-modal-desc" id="qrModalDesc">
+        Dùng Camera điện thoại hoặc Zalo quét mã để mở ngay thiệp chúc mừng riêng biệt:
+      </p>
+      
+      <div class="qr-code-frame">
+        <div id="qrCodeContainer" class="qr-code-box"></div>
+        <div class="qr-target-tag" id="qrTargetTag">Gửi: Lan Anh ❤️</div>
+      </div>
+
+      <div class="qr-actions">
+        <button id="downloadQrBtn" class="btn btn-primary btn-sm">
+          <span>⬇️ Tải Ảnh Mã QR (PNG)</span>
+        </button>
+        <button id="copyQrLinkBtn" class="btn btn-secondary btn-sm">
+          <span>📋 Sao Chép Link</span>
+        </button>
+      </div>
+      <p class="qr-print-tip">
+        💡 <em>Mẹo: Tải ảnh mã QR này để in thiệp, in sticker dán lên bó hoa tươi hoặc hộp quà tặng thật gửi cho người ấy nhé!</em>
+      </p>
+    </div>
+  </div>
+
   <!-- Thanh điều khiển tiện ích trên cùng -->
   <header class="top-nav">
     <div class="brand-badge" id="brandBadge">
@@ -105,6 +171,9 @@
               <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="mother" title="Copy tin nhắn Zalo gửi Mẹ">
                 💬 Copy Tin Nhắn Zalo
               </button>
+              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="mother" title="Xem & tải mã QR thiệp gửi Mẹ">
+                📱 Mã QR
+              </button>
               <button class="btn btn-text btn-sm preview-role-btn" data-role="mother" title="Xem thử thiệp">
                 👁️ Xem Thử
               </button>
@@ -127,6 +196,9 @@
               </button>
               <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="lover" title="Copy tin nhắn Zalo gửi Người Yêu">
                 💬 Copy Tin Nhắn Zalo
+              </button>
+              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="lover" title="Xem & tải mã QR thiệp gửi Người Yêu">
+                📱 Mã QR
               </button>
               <button class="btn btn-text btn-sm preview-role-btn" data-role="lover" title="Xem thử thiệp">
                 👁️ Xem Thử
@@ -151,6 +223,9 @@
               <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="sister" title="Copy tin nhắn Zalo gửi Chị/Em">
                 💬 Copy Tin Nhắn Zalo
               </button>
+              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="sister" title="Xem & tải mã QR thiệp gửi Chị/Em">
+                📱 Mã QR
+              </button>
               <button class="btn btn-text btn-sm preview-role-btn" data-role="sister" title="Xem thử thiệp">
                 👁️ Xem Thử
               </button>
@@ -174,6 +249,9 @@
               <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="teacher" title="Copy tin nhắn Zalo gửi Cô Giáo">
                 💬 Copy Tin Nhắn Zalo
               </button>
+              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="teacher" title="Xem & tải mã QR thiệp gửi Cô Giáo">
+                📱 Mã QR
+              </button>
               <button class="btn btn-text btn-sm preview-role-btn" data-role="teacher" title="Xem thử thiệp">
                 👁️ Xem Thử
               </button>
@@ -196,6 +274,9 @@
               </button>
               <button class="btn btn-secondary btn-sm copy-role-msg-btn" data-role="colleague" title="Copy tin nhắn Zalo gửi Đồng Nghiệp">
                 💬 Copy Tin Nhắn Zalo
+              </button>
+              <button class="btn btn-accent btn-sm show-role-qr-btn" data-role="colleague" title="Xem & tải mã QR thiệp gửi Đồng Nghiệp">
+                📱 Mã QR
               </button>
               <button class="btn btn-text btn-sm preview-role-btn" data-role="colleague" title="Xem thử thiệp">
                 👁️ Xem Thử
@@ -246,25 +327,46 @@
             </div>
           </div>
 
-          <!-- Kết quả Link sinh ra -->
+          <!-- Kết quả Link sinh ra & Mã QR Trực Tiếp -->
           <div class="generated-result-card">
             <div class="result-header">
-              <span>🔗 Link Thiệp Riêng Biệt Đã Sẵn Sàng:</span>
-            </div>
-            <div class="result-input-group">
-              <input type="text" id="generatedLinkInput" readonly value="" class="result-url-input">
-              <button id="copyGeneratedLinkBtn" class="btn btn-primary btn-sm">
-                📋 Sao Chép Link
-              </button>
+              <span>🔗 Link Thiệp Riêng Biệt & Mã QR Trực Tiếp:</span>
             </div>
 
-            <!-- Khung xem trước tin nhắn Zalo kèm link -->
-            <div class="zalo-message-preview">
-              <div class="zalo-preview-header">
-                <span>💬 Lời nhắn Zalo / Messenger soạn sẵn:</span>
-                <button id="copyZaloMsgBtn" class="btn-text">📋 Copy toàn bộ tin nhắn</button>
+            <div class="result-flex-wrapper">
+              <div class="result-left-col">
+                <div class="result-input-group">
+                  <input type="text" id="generatedLinkInput" readonly value="" class="result-url-input">
+                  <button id="copyGeneratedLinkBtn" class="btn btn-primary btn-sm">
+                    📋 Sao Chép Link
+                  </button>
+                </div>
+
+                <!-- Khung xem trước tin nhắn Zalo kèm link -->
+                <div class="zalo-message-preview">
+                  <div class="zalo-preview-header">
+                    <span>💬 Lời nhắn Zalo / Messenger soạn sẵn:</span>
+                    <button id="copyZaloMsgBtn" class="btn-text">📋 Copy toàn bộ tin nhắn</button>
+                  </div>
+                  <div id="zaloMessageContent" class="zalo-message-text"></div>
+                </div>
               </div>
-              <div id="zaloMessageContent" class="zalo-message-text"></div>
+
+              <!-- Cột hiển thị Mã QR trực tiếp -->
+              <div class="result-qr-col">
+                <div class="builder-qr-card">
+                  <div id="builderQrCodeBox" class="builder-qr-box"></div>
+                  <span class="builder-qr-caption">📱 Quét QR bằng Zalo</span>
+                  <div class="builder-qr-btns">
+                    <button id="downloadBuilderQrBtn" class="btn btn-secondary btn-sm" title="Tải ảnh mã QR PNG">
+                      ⬇️ Tải QR
+                    </button>
+                    <button id="enlargeBuilderQrBtn" class="btn btn-text btn-sm" title="Phóng to mã QR">
+                      🔍 Xem To
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="builder-actions">
@@ -293,6 +395,14 @@
 
           <!-- Bức thư bên trong -->
           <article class="letter-paper" id="letterPaper">
+            <!-- Con tem ảnh bưu chính kỷ niệm 20/10 -->
+            <div class="letter-stamp" id="recipientStamp" title="Tem bưu chính kỷ niệm 20/10">
+              <div class="stamp-perforation">
+                <img id="stampImg" src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=200&auto=format&fit=crop" alt="Tem ảnh kỷ niệm">
+              </div>
+              <span class="stamp-postmark">20·10</span>
+            </div>
+
             <div class="letter-decor top-decor">❖ ── ✦ ── ❖</div>
             
             <header class="letter-header">
@@ -318,10 +428,13 @@
 
             <!-- Nút hành động trong thiệp -->
             <div class="letter-actions">
+              <button id="thankSenderBtn" class="btn btn-primary btn-sm thank-btn" title="Gửi lời cảm ơn chân thành đến người gửi">
+                <span>💖 Gửi Lời Cảm Ơn</span>
+              </button>
               <button id="randomWishBtn" class="btn btn-secondary btn-sm" title="Đổi một lời chúc ý nghĩa khác">
                 🔄 Đổi Lời Chúc Khác
               </button>
-              <button id="copyWishBtn" class="btn btn-primary btn-sm" title="Sao chép nội dung lời chúc này">
+              <button id="copyWishBtn" class="btn btn-secondary btn-sm" title="Sao chép nội dung lời chúc này">
                 📋 Sao Chép Lời Chúc
               </button>
               <button id="fireworksBtn" class="btn btn-accent btn-sm" title="Bắn pháo hoa & hoa hồng rực rỡ">
@@ -411,6 +524,10 @@
           
           <img id="photoDisplay" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=800&auto=format&fit=crop" alt="Bó hoa chúc mừng 20/10 tươi thắm">
           
+          <button id="recipientChangePhotoBtn" class="btn-change-photo-badge" title="Đổi hoặc thêm ảnh của bạn">
+            📷 Đổi / Thêm Ảnh Của Bạn
+          </button>
+
           <div class="frame-caption">
             <p id="photoCaption">"Vì phụ nữ là để yêu thương trọn đời!"</p>
           </div>
@@ -437,6 +554,9 @@
       <!-- Nút dành cho Người Nhận (Chỉ xem & cảm nhận) -->
       <div id="recipientFooterCta" class="recipient-footer-cta hidden">
         <div class="footer-buttons" style="margin-bottom: 14px;">
+          <button id="recipientThankFooterBtn" class="btn btn-primary">
+            <span>💖 Gửi Lời Cảm Ơn Đến Người Tặng</span>
+          </button>
           <button id="recipientFireworksBtn" class="btn btn-accent">
             <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
           </button>
@@ -468,6 +588,8 @@
     <span class="toast-msg" id="toastMsg">Đã sao chép thành công!</span>
   </div>
 
+  <!-- Thư viện tạo mã QR offline 100% -->
+  <script src="qrcode.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

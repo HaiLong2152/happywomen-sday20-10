@@ -1228,6 +1228,390 @@ body {
 }
 
 /* ==========================================================================
+   LIVE QR CODE, WELCOME PHOTO MODAL & POSTAGE STAMP
+   ========================================================================== */
+
+/* Result Flex Wrapper in Tab 2 */
+.result-flex-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.result-left-col {
+  flex: 1;
+}
+
+.result-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.builder-qr-card {
+  background: white;
+  border: 1.5px solid var(--soft-rose);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(255, 77, 109, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.builder-qr-box {
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.builder-qr-box canvas,
+.builder-qr-box img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.builder-qr-caption {
+  font-size: 0.76rem;
+  color: var(--muted-text);
+  font-weight: 600;
+}
+
+.builder-qr-btns {
+  display: flex;
+  gap: 6px;
+}
+
+/* Modals General Backdrop */
+.welcome-photo-modal,
+.qr-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.welcome-photo-backdrop,
+.qr-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 5, 10, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.welcome-photo-card,
+.qr-modal-card {
+  position: relative;
+  z-index: 10;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--soft-rose);
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  animation: modalPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 1.8rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: var(--muted-text);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.modal-close-btn:hover {
+  color: var(--deep-rose);
+  transform: scale(1.15);
+}
+
+.welcome-badge,
+.qr-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.welcome-title,
+.qr-modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--deep-rose);
+  margin-bottom: 10px;
+}
+
+.welcome-subtitle,
+.qr-modal-desc {
+  font-size: 0.92rem;
+  color: var(--dark-text);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Photo Upload Slot in Modal */
+.photo-upload-slot {
+  background: #fff5f7;
+  border: 2px dashed var(--primary-pink);
+  border-radius: 20px;
+  padding: 24px 16px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  margin-bottom: 20px;
+}
+
+.photo-upload-slot:hover {
+  background: #ffe8ee;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2);
+}
+
+.slot-idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-camera-icon {
+  font-size: 2.4rem;
+  animation: pulseCamera 2s infinite;
+}
+
+@keyframes pulseCamera {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+.slot-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--deep-rose);
+}
+
+.slot-subtext {
+  font-size: 0.8rem;
+  color: var(--muted-text);
+}
+
+.slot-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.slot-preview img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--primary-pink);
+  box-shadow: 0 8px 25px rgba(255, 77, 109, 0.35);
+}
+
+.slot-change-hint {
+  font-size: 0.82rem;
+  color: var(--deep-rose);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.welcome-actions,
+.qr-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.welcome-note,
+.qr-print-tip {
+  font-size: 0.8rem;
+  color: var(--muted-text);
+  line-height: 1.4;
+}
+
+/* QR Code Frame in QR Modal */
+.qr-code-frame {
+  background: white;
+  border: 2px solid var(--soft-rose);
+  border-radius: 20px;
+  padding: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(201, 24, 74, 0.12);
+  margin-bottom: 20px;
+}
+
+.qr-code-box {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-box canvas,
+.qr-code-box img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.qr-target-tag {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--deep-rose);
+  background: var(--light-blush);
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+/* Personal Postage Stamp on Letter */
+.letter-stamp {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 62px;
+  height: 74px;
+  background: #fff5f7;
+  border: 2px dashed #f28482;
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: rotate(3deg);
+  transition: transform 0.3s;
+  z-index: 5;
+}
+
+.letter-stamp:hover {
+  transform: rotate(0) scale(1.08);
+}
+
+.stamp-perforation {
+  width: 100%;
+  height: 52px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.stamp-perforation img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stamp-postmark {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--deep-rose);
+  margin-top: 2px;
+}
+
+/* Photo Change Badge on Main Photo Frame */
+.btn-change-photo-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--deep-rose);
+  border: 1px solid var(--soft-rose);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: var(--transition-smooth);
+}
+
+.btn-change-photo-badge:hover {
+  background: var(--primary-pink);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Recipient Mode Above-the-fold Optimization */
+.recipient-view-active .hero-section {
+  padding: 8px 10px 0;
+}
+
+.recipient-view-active .hero-title {
+  font-size: clamp(1.6rem, 3.8vw, 2.4rem);
+  margin-bottom: 6px;
+}
+
+.recipient-view-active .hero-subtitle {
+  display: none;
+}
+
+.recipient-view-active .envelope-section {
+  margin-top: 5px;
+}
+
+.thank-btn {
+  background: linear-gradient(135deg, #e63946, #c9184a) !important;
+  color: white !important;
+  animation: thankPulse 2.4s infinite;
+}
+
+@keyframes thankPulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(201, 24, 74, 0.3); }
+  50% { box-shadow: 0 6px 22px rgba(201, 24, 74, 0.6); }
+}
+
+/* Typewriter animation cursor */
+.typing-cursor::after {
+  content: '|';
+  color: var(--primary-pink);
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ==========================================================================
    RESPONSIVE DESIGN (Tối ưu hoàn hảo cho Mobile)
    ========================================================================== */
 @media (max-width: 680px) {
@@ -1334,6 +1718,33 @@ body {
 
   .quick-roles-grid {
     grid-template-columns: 1fr;
+  }
+
+  .result-flex-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .result-qr-col {
+    margin-top: 14px;
+    align-self: center;
+  }
+
+  .letter-stamp {
+    width: 48px;
+    height: 60px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .stamp-perforation {
+    height: 40px;
+  }
+
+  .welcome-photo-card,
+  .qr-modal-card {
+    padding: 24px 16px;
+    max-width: 92vw;
   }
 }
 
