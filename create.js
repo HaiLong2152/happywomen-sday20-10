@@ -48,8 +48,11 @@ const resultUrlInput = document.getElementById('resultUrlInput');
 const copyUrlBtn = document.getElementById('copyUrlBtn');
 const zaloMsgText = document.getElementById('zaloMsgText');
 const copyZaloBtn = document.getElementById('copyZaloBtn');
+const openZaloChatBtn = document.getElementById('openZaloChatBtn');
 const openPreviewTabBtn = document.getElementById('openPreviewTabBtn');
 const studioQrBox = document.getElementById('studioQrBox');
+const shareQrBtn = document.getElementById('shareQrBtn');
+const copyQrImageBtn = document.getElementById('copyQrImageBtn');
 const downloadQrBtn = document.getElementById('downloadQrBtn');
 
 // Khởi tạo giá trị ban đầu cho hộp thư và lời chúc
@@ -142,15 +145,15 @@ function buildZaloMessage(url) {
   return `💐 ${toGreeting} 💖\n\nNhân ngày 20/10, chúc bạn luôn luôn xinh đẹp, hạnh phúc, được yêu thương và rạng rỡ mỗi ngày!\n\nCó một bức thiệp bất ngờ và món quà tinh thần dành riêng cho bạn tại đây:\n👉 ${url}\n\n(Chạm vào con dấu sáp màu đỏ trên màn hình để mở thiệp và rút thông điệp may mắn nhé!) 🌸${senderSignature}`;
 }
 
-// Vẽ mã QR trực tiếp
+// Vẽ mã QR trực tiếp độ phân giải cao
 function renderStudioQr(url) {
   if (typeof QRCode === 'undefined' || !studioQrBox) return;
   studioQrBox.innerHTML = '';
   try {
     studioQrInstance = new QRCode(studioQrBox, {
       text: url,
-      width: 160,
-      height: 160,
+      width: 260,
+      height: 260,
       colorDark: "#c9184a",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.M
@@ -169,22 +172,227 @@ function updateOutputs() {
   renderStudioQr(url);
 }
 
-// Tải ảnh mã QR
-function downloadQrCode() {
-  if (!studioQrBox) return;
-  const canvas = studioQrBox.querySelector('canvas');
-  const toName = recipientNameInput ? recipientNameInput.value.trim() : '';
-  const fileName = toName ? `ma-qr-thiep-20-10-${toName}.png` : 'ma-qr-thiep-20-10.png';
-
-  if (canvas) {
-    const link = document.createElement('a');
-    link.download = fileName;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-    showToast("Đã tải ảnh mã QR! Hãy in hoặc dán thiệp hoa nhé 🌸", "🖼️");
-  } else {
-    showToast("Đang tạo mã QR, vui lòng thử lại sau giây lát!", "⚠️");
+// Vẽ bo góc tương thích mọi trình duyệt
+function drawCanvasRoundRect(ctx, x, y, width, height, radius) {
+  if (typeof ctx.roundRect === 'function') {
+    ctx.beginPath();
+    ctx.roundRect(x, y, width, height, radius);
+    ctx.fill();
+    ctx.stroke();
+    return;
   }
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+}
+
+// Sinh bức thiệp ảnh QR trang trí đầy đủ (Sẵn sàng gửi thẳng vào Zalo/Mess)
+function generateDecoratedQrCardCanvas() {
+  if (!studioQrBox) return null;
+  const qrCanvas = studioQrBox.querySelector('canvas');
+  if (!qrCanvas) return null;
+
+  const to = recipientNameInput ? recipientNameInput.value.trim() : '';
+  const from = senderNameInput ? senderNameInput.value.trim() : '';
+
+  const w = 540;
+  const h = 680;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // Nền gradient hoa hồng pastel trang nhã
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.4, '#fff5f7');
+  grad.addColorStop(1, '#ffe3e8');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Khung viền đôi sang trọng
+  ctx.strokeStyle = '#ff758f';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(16, 16, w - 32, h - 32);
+
+  ctx.strokeStyle = '#c9184a';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(22, 22, w - 44, h - 44);
+
+  // Icon hoa góc
+  ctx.font = '22px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🌸', 42, 42);
+  ctx.fillText('🌸', w - 42, 42);
+  ctx.fillText('🌹', 42, h - 42);
+  ctx.fillText('🌹', w - 42, h - 42);
+
+  // Tiêu đề sự kiện
+  ctx.fillStyle = '#a4133c';
+  ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText('✨ 20 · 10 · PHỤ NỮ VIỆT NAM ✨', w / 2, 60);
+
+  // Lời nhắn đề tặng
+  ctx.fillStyle = '#7a2e39';
+  ctx.font = 'italic 15px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('Món quà tinh thần đặc biệt dành tặng', w / 2, 95);
+
+  ctx.fillStyle = '#c9184a';
+  ctx.font = 'bold 24px "Playfair Display", Georgia, "Times New Roman", serif';
+  const recipientText = to ? `💐 ${to} 💖` : '💐 Người Phụ Nữ Tuyệt Vời 💖';
+  ctx.fillText(recipientText, w / 2, 132);
+
+  // Khung trắng bo góc chứa mã QR
+  const qrBoxSize = 280;
+  const qrBoxX = (w - qrBoxSize) / 2;
+  const qrBoxY = 165;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#ffccd5';
+  ctx.lineWidth = 2;
+  drawCanvasRoundRect(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 20);
+
+  // Vẽ mã QR vào giữa khung trắng
+  const qrInnerSize = 240;
+  const qrInnerX = (w - qrInnerSize) / 2;
+  const qrInnerY = qrBoxY + (qrBoxSize - qrInnerSize) / 2;
+  ctx.drawImage(qrCanvas, qrInnerX, qrInnerY, qrInnerSize, qrInnerSize);
+
+  // Hướng dẫn mở thiệp
+  ctx.fillStyle = '#c9184a';
+  ctx.font = 'bold 15px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('📱 Dùng Camera hoặc Zalo quét mã để mở thiệp', w / 2, 485);
+
+  ctx.fillStyle = '#6b404c';
+  ctx.font = 'italic 13px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('(Chạm vào con dấu sáp màu đỏ để mở phong thư bí mật)', w / 2, 514);
+
+  // Chữ ký người gửi
+  ctx.fillStyle = '#a4133c';
+  ctx.font = 'italic bold 15px "Segoe UI", Arial, sans-serif';
+  const senderText = from ? `Gửi tặng với tất cả yêu thương từ: ${from} 💌` : 'Trân quý & Yêu thương! 🌸';
+  ctx.fillText(senderText, w / 2, 565);
+
+  return canvas;
+}
+
+// Lấy Blob của thiệp ảnh QR
+function getDecoratedQrBlob() {
+  return new Promise((resolve) => {
+    const canvas = generateDecoratedQrCardCanvas();
+    if (!canvas) {
+      resolve(null);
+      return;
+    }
+    if (canvas.toBlob) {
+      canvas.toBlob((blob) => resolve(blob), 'image/png');
+    } else {
+      const dataUrl = canvas.toDataURL('image/png');
+      const binStr = atob(dataUrl.split(',')[1]);
+      const len = binStr.length;
+      const arr = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        arr[i] = binStr.charCodeAt(i);
+      }
+      resolve(new Blob([arr], { type: 'image/png' }));
+    }
+  });
+}
+
+// Sao chép ảnh thiệp QR vào Clipboard (để dán Ctrl+V vào Zalo/Mess ngay)
+async function copyQrImageToClipboard(existingBlob = null) {
+  try {
+    const blob = existingBlob || await getDecoratedQrBlob();
+    if (!blob) {
+      showToast("Mã QR chưa sẵn sàng, vui lòng thử lại!", "⚠️");
+      return false;
+    }
+
+    if (navigator.clipboard && window.ClipboardItem) {
+      const item = new ClipboardItem({ 'image/png': blob });
+      await navigator.clipboard.write([item]);
+      showToast("Đã copy ảnh thiệp QR! Hãy mở Zalo/Messenger nhấn Ctrl+V để gửi ngay nhé 💌", "📋");
+      return true;
+    } else {
+      throw new Error("ClipboardItem not supported");
+    }
+  } catch (err) {
+    console.warn("Không thể sao chép ảnh vào clipboard:", err);
+    showToast("Trình duyệt không cho phép dán ảnh tự động, đang tải ảnh về máy!", "🖼️");
+    downloadQrCode();
+    return false;
+  }
+}
+
+// Gửi nhanh ảnh thiệp QR (Web Share API trên Mobile hoặc copy ảnh trên PC)
+async function shareQrImage() {
+  const toName = recipientNameInput ? recipientNameInput.value.trim() : '';
+  const fromName = senderNameInput ? senderNameInput.value.trim() : '';
+  const url = buildPersonalizedUrl();
+  const fileName = toName ? `thiep-qr-20-10-${toName}.png` : 'thiep-qr-20-10.png';
+
+  showToast("Đang chuẩn bị gửi ảnh thiệp QR...", "⏳");
+  const blob = await getDecoratedQrBlob();
+  if (!blob) {
+    showToast("Mã QR chưa sẵn sàng, vui lòng thử lại sau giây lát!", "⚠️");
+    return;
+  }
+
+  // 1. Thử gửi trực tiếp qua Web Share API (Cực kỳ nhạy trên Smartphone iOS / Android)
+  if (navigator.canShare) {
+    try {
+      const file = new File([blob], fileName, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `💐 Thiệp 20/10 gửi tặng ${toName || 'bạn'} 💖`,
+          text: `Nhân ngày 20/10, gửi tặng ${toName || 'bạn'} món quà tinh thần đặc biệt!\n👉 Mở thiệp tại: ${url}`
+        });
+        showToast("Đã chia sẻ ảnh thiệp QR thành công! 🌸", "🚀");
+        return;
+      }
+    } catch (shareErr) {
+      if (shareErr.name === 'AbortError') {
+        return; // Người dùng ấn hủy trên bảng chia sẻ
+      }
+      console.warn("Web Share API không khả dụng với file:", shareErr);
+    }
+  }
+
+  // 2. Nếu trên máy tính hoặc trình duyệt không hỗ trợ gửi file trực tiếp:
+  // Sao chép thẳng ảnh vào Clipboard (Bộ nhớ tạm) để người dùng chỉ cần nhấn Ctrl+V vào ô chat Zalo/Messenger!
+  const copied = await copyQrImageToClipboard(blob);
+  if (!copied) {
+    downloadQrCode();
+  }
+}
+
+// Tải ảnh thiệp QR về máy
+function downloadQrCode() {
+  const canvas = generateDecoratedQrCardCanvas() || (studioQrBox ? studioQrBox.querySelector('canvas') : null);
+  if (!canvas) {
+    showToast("Đang tạo mã QR, vui lòng thử lại sau giây lát!", "⚠️");
+    return;
+  }
+  const toName = recipientNameInput ? recipientNameInput.value.trim() : '';
+  const fileName = toName ? `thiep-qr-20-10-${toName}.png` : 'thiep-qr-20-10.png';
+
+  const link = document.createElement('a');
+  link.download = fileName;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+  showToast("Đã tải ảnh thiệp QR! Hãy gửi hoặc in dán hộp quà nhé 🌸", "🖼️");
 }
 
 // Sự kiện
@@ -232,6 +440,30 @@ if (copyZaloBtn) {
     const msg = zaloMsgText ? zaloMsgText.textContent : '';
     copyToClipboard(msg, "Đã sao chép lời nhắn Zalo! Hãy dán gửi ngay nhé 💌", "💬");
   });
+}
+
+if (openZaloChatBtn) {
+  openZaloChatBtn.addEventListener('click', () => {
+    const msg = zaloMsgText ? zaloMsgText.textContent : '';
+    copyToClipboard(msg, "Đã sao chép lời nhắn! Đang mở Zalo Web...", "💬");
+    setTimeout(() => {
+      window.open('https://chat.zalo.me/', '_blank');
+    }, 450);
+  });
+}
+
+if (shareQrBtn) {
+  shareQrBtn.addEventListener('click', shareQrImage);
+}
+
+if (copyQrImageBtn) {
+  copyQrImageBtn.addEventListener('click', () => {
+    copyQrImageToClipboard();
+  });
+}
+
+if (studioQrBox) {
+  studioQrBox.addEventListener('click', shareQrImage);
 }
 
 if (downloadQrBtn) {

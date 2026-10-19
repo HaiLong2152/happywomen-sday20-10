@@ -200,10 +200,20 @@
       align-items: center;
       justify-content: center;
       background: white;
+      border-radius: 12px;
+      padding: 6px;
+      border: 1.5px solid var(--soft-rose);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .studio-qr-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 18px rgba(201, 24, 74, 0.16);
     }
     .studio-qr-box canvas, .studio-qr-box img {
       width: 100% !important;
       height: 100% !important;
+      border-radius: 8px;
     }
     .url-copy-row {
       display: flex;
@@ -364,6 +374,11 @@
                 <button id="copyZaloBtn" class="btn-text">📋 Copy tin nhắn</button>
               </div>
               <div id="zaloMsgText" class="zalo-msg-text"></div>
+              <div style="margin-top: 10px;">
+                <button id="openZaloChatBtn" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; font-size: 0.84rem; background: #e8f4fd; color: #0068ff; border: 1px solid #b3d7ff;">
+                  <span>💬 Copy & Mở Zalo Web Để Gửi Liền</span>
+                </button>
+              </div>
             </div>
 
             <!-- Nút xem thử trong tab mới -->
@@ -374,13 +389,26 @@
 
           <!-- Cột Mã QR trực tiếp -->
           <div class="result-qr-pane">
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--deep-rose);">📱 Quét Mã Mở Thiệp</span>
-            <div id="studioQrBox" class="studio-qr-box"></div>
-            <button id="downloadQrBtn" class="btn btn-primary btn-sm" style="width: 100%;">
-              ⬇️ Tải Ảnh QR (PNG)
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--deep-rose);">📱 Thiệp Mã QR Riêng</span>
+            <div id="studioQrBox" class="studio-qr-box" title="Bấm để gửi nhanh hoặc sao chép ảnh"></div>
+            
+            <!-- Nút 1: Gửi Nhanh Ảnh QR (Zalo / Messenger) -->
+            <button id="shareQrBtn" class="btn btn-primary btn-sm" style="width: 100%; justify-content: center; gap: 6px; font-weight: 700; padding: 11px 14px;">
+              <span>🚀 Gửi Nhanh Ảnh QR (Zalo / Mess)</span>
             </button>
-            <p style="font-size: 0.74rem; color: var(--muted-text); line-height: 1.4;">
-              💡 <em>In mã QR này kẹp vào bó hoa tươi hoặc dán hộp quà thật để người nhận quét bằng Zalo nhé!</em>
+
+            <!-- Nút 2: Sao Chép Ảnh QR để dán Ctrl+V ngay -->
+            <button id="copyQrImageBtn" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; gap: 6px; padding: 10px 14px;">
+              <span>📋 Copy Ảnh QR (Để dán Ctrl+V)</span>
+            </button>
+
+            <!-- Nút 3: Tải ảnh về máy cho ai cần in ấn -->
+            <button id="downloadQrBtn" class="btn btn-outline btn-sm" style="width: 100%; justify-content: center; font-size: 0.82rem; border: 1px dashed var(--soft-rose); color: var(--deep-rose); padding: 8px 12px;">
+              <span>⬇️ Hoặc Tải Ảnh Về Máy</span>
+            </button>
+
+            <p style="font-size: 0.76rem; color: var(--muted-text); line-height: 1.4; margin: 4px 0 0;">
+              💡 <em>Trên điện thoại: Bấm <strong>[Gửi Nhanh]</strong> để chọn Zalo/Messenger gửi ngay không cần lưu máy.<br>Trên máy tính: Bấm <strong>[Copy Ảnh]</strong> rồi nhấn <strong>Ctrl+V</strong> vào khung chat để gửi trực tiếp!</em>
             </p>
           </div>
         </div>
@@ -395,7 +423,7 @@
   </div>
 
   <script src="qrcode.min.js"></script>
-  <script src="create.js?v=3.6"></script>
+  <script src="create.js?v=3.8"></script>
 </body>
 </html>
 
