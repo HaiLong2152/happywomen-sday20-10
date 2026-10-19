@@ -296,6 +296,11 @@ function initFromURL() {
     customRecipientName = decodeURIComponent(toParam).trim();
   }
 
+  const wishParam = urlParams.get('wish');
+  if (wishParam !== null && !isNaN(parseInt(wishParam))) {
+    currentWishIndex = Math.abs(parseInt(wishParam)) % UNIVERSAL_WISHES.length;
+  }
+
   updateWishDisplay();
   updatePhotoDisplay();
   updateShareSectionOutputs();
@@ -348,9 +353,11 @@ function renderMiniQr(url) {
   }
 }
 
-// Mở Modal phóng to mã QR
-function openQrModal(url) {
-  currentModalQrUrl = url;
+// Mở Modal phóng to mã QR & Chia sẻ
+function openQrModal(url = '') {
+  const finalUrl = url || generateShareUrl(customSenderName, customRecipientName);
+  currentModalQrUrl = finalUrl;
+  
   if (qrTargetTag) {
     qrTargetTag.textContent = customSenderName 
       ? `💐 Thiệp 20/10 gửi tặng từ ${customSenderName} 💖` 
@@ -360,13 +367,17 @@ function openQrModal(url) {
   if (qrCodeContainer && typeof QRCode !== 'undefined') {
     qrCodeContainer.innerHTML = '';
     modalQrInstance = new QRCode(qrCodeContainer, {
-      text: url,
-      width: 200,
-      height: 200,
+      text: finalUrl,
+      width: 190,
+      height: 190,
       colorDark: "#b5173f",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+      correctLevel: QRCode.CorrectLevel.M
     });
+  }
+
+  if (senderNameInput) {
+    senderNameInput.value = customSenderName;
   }
 
   if (qrModal) qrModal.classList.remove('hidden');
@@ -404,6 +415,13 @@ function checkWelcomePhotoModal() {
   try {
     const handled = sessionStorage.getItem('welcome_handled');
     if (handled || recipientPhotoData) return;
+
+    const welcomeTitle = document.getElementById('welcomeTitle');
+    if (welcomeTitle) {
+      welcomeTitle.textContent = customRecipientName 
+        ? `Dành Riêng Cho ${customRecipientName}!` 
+        : "Dành Tặng Người Phụ Nữ Tuyệt Vời!";
+    }
 
     if (welcomePhotoModal) {
       setTimeout(() => {
@@ -504,12 +522,20 @@ if (resetPhotoBtn) {
 // ==========================================
 // 7. MỞ PHONG BÌ & CÁC NÚT TƯƠNG TÁC
 // ==========================================
+const toggleEnvelopeBtn = document.getElementById('toggleEnvelopeBtn');
+
 function openEnvelope() {
   if (isEnvelopeOpened) return;
   isEnvelopeOpened = true;
   envelope.classList.add('is-open');
   envelopeHint.textContent = "💖 Thiệp chúc đã được mở ra với trọn vẹn yêu thương!";
   
+  if (toggleEnvelopeBtn) {
+    toggleEnvelopeBtn.innerHTML = '<span>✉️ Đóng Lại Phong Bì</span>';
+    toggleEnvelopeBtn.classList.remove('btn-primary');
+    toggleEnvelopeBtn.classList.add('btn-secondary');
+  }
+
   // Tự động phát nhạc nền nhẹ nhàng
   toggleBackgroundMusic(true);
 
@@ -520,6 +546,33 @@ function openEnvelope() {
   // Hiệu ứng chữ gõ tay nắn nót
   const current = UNIVERSAL_WISHES[currentWishIndex % UNIVERSAL_WISHES.length];
   startTypewriterEffect(current.wish);
+}
+
+function closeEnvelope() {
+  isEnvelopeOpened = false;
+  envelope.classList.remove('is-open');
+  envelopeHint.innerHTML = '👇 Chạm vào con dấu sáp <strong>[MỞ THIỆP]</strong> để khám phá lời chúc bí mật!';
+  
+  if (toggleEnvelopeBtn) {
+    toggleEnvelopeBtn.innerHTML = '<span>👁️ Mở Thiệp Xem Thử</span>';
+    toggleEnvelopeBtn.classList.remove('btn-secondary');
+    toggleEnvelopeBtn.classList.add('btn-primary');
+  }
+
+  if (typewriterTimeout) clearTimeout(typewriterTimeout);
+  showToast("Đã đóng phong bì lại!", "✉️");
+}
+
+function toggleEnvelope() {
+  if (isEnvelopeOpened) {
+    closeEnvelope();
+  } else {
+    openEnvelope();
+  }
+}
+
+if (toggleEnvelopeBtn) {
+  toggleEnvelopeBtn.addEventListener('click', toggleEnvelope);
 }
 
 if (waxSeal) {
@@ -577,50 +630,50 @@ function sendThankYouMessage() {
 if (thankSenderBtn) thankSenderBtn.addEventListener('click', sendThankYouMessage);
 if (footerThankBtn) footerThankBtn.addEventListener('click', sendThankYouMessage);
 
-// Sự kiện trong Share Hub
+// Sự kiện khi nhập tên người gửi (trong Popup QR)
 if (senderNameInput) {
   senderNameInput.addEventListener('input', () => {
-    updateShareSectionOutputs();
+    customSenderName = senderNameInput.value.trim();
+    
+    // Cập nhật chữ ký người gửi trên thiệp theo thời gian thực
+    if (letterSignature) {
+      letterSignature.textContent = customSenderName 
+        ? `Với tất cả sự trân quý & yêu thương từ ${customSenderName}!` 
+        : "Với tất cả sự trân quý & yêu thương!";
+    }
+    const thankWho = customSenderName ? `Đến ${customSenderName}` : "Đến Người Tặng";
+    if (thankSenderBtn) thankSenderBtn.innerHTML = `<span>💖 Gửi Lời Cảm Ơn ${thankWho}</span>`;
+    if (footerThankBtn) footerThankBtn.innerHTML = `<span>💖 Gửi Lời Cảm Ơn ${thankWho}</span>`;
+
+    // Cập nhật lại mã QR trong modal theo link mới
+    const updatedUrl = generateShareUrl(customSenderName, customRecipientName);
+    currentModalQrUrl = updatedUrl;
+    if (qrTargetTag) {
+      qrTargetTag.textContent = customSenderName 
+        ? `💐 Thiệp 20/10 gửi tặng từ ${customSenderName} 💖` 
+        : "💐 Chúc Mừng 20/10 Phụ Nữ Việt Nam 💖";
+    }
+    if (qrCodeContainer && typeof QRCode !== 'undefined') {
+      qrCodeContainer.innerHTML = '';
+      modalQrInstance = new QRCode(qrCodeContainer, {
+        text: updatedUrl,
+        width: 190,
+        height: 190,
+        colorDark: "#b5173f",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
   });
 }
 
-if (copyShareLinkBtn) {
-  copyShareLinkBtn.addEventListener('click', () => {
-    const link = shareLinkInput ? shareLinkInput.value : generateShareUrl();
-    copyToClipboard(link, "Đã sao chép link thiệp chúc mừng!", "🔗");
-  });
+// Nút mở Popup QR & Chia Sẻ trên Menu & Chân trang
+if (navShareBtn) {
+  navShareBtn.addEventListener('click', () => openQrModal());
 }
-
-if (copyZaloMsgBtn) {
-  copyZaloMsgBtn.addEventListener('click', () => {
-    const msg = zaloMessageContent ? zaloMessageContent.textContent : '';
-    copyToClipboard(msg, "Đã copy tin nhắn Zalo kèm link thiệp! Hãy dán gửi ngay nhé 💌", "💬");
-  });
+if (footerShareBtn) {
+  footerShareBtn.addEventListener('click', () => openQrModal());
 }
-
-if (downloadShareQrBtn) {
-  downloadShareQrBtn.addEventListener('click', () => {
-    downloadQrFromElement(shareQrCodeBox, "ma-qr-thiep-20-10.png");
-  });
-}
-
-if (enlargeShareQrBtn) {
-  enlargeShareQrBtn.addEventListener('click', () => {
-    const link = shareLinkInput ? shareLinkInput.value : generateShareUrl();
-    openQrModal(link);
-  });
-}
-
-// Cuộn đến Share Hub khi bấm nút Chia Sẻ trên Top Nav hoặc Footer
-function scrollToShareHub() {
-  if (shareSection) {
-    shareSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    showToast("Quét mã QR hoặc sao chép link để chia sẻ thiệp nhé!", "📱");
-  }
-}
-
-if (navShareBtn) navShareBtn.addEventListener('click', scrollToShareHub);
-if (footerShareBtn) footerShareBtn.addEventListener('click', scrollToShareHub);
 
 // Modal QR Controls
 if (closeQrModalBtn) {
@@ -637,9 +690,16 @@ if (downloadQrBtn) {
 
 if (copyQrLinkBtn) {
   copyQrLinkBtn.addEventListener('click', () => {
-    if (currentModalQrUrl) {
-      copyToClipboard(currentModalQrUrl, "Đã sao chép link quét mã QR!", "🔗");
-    }
+    const link = currentModalQrUrl || generateShareUrl(customSenderName, customRecipientName);
+    copyToClipboard(link, "Đã sao chép link thiệp chúc mừng!", "🔗");
+  });
+}
+
+if (copyZaloMsgBtn) {
+  copyZaloMsgBtn.addEventListener('click', () => {
+    const link = currentModalQrUrl || generateShareUrl(customSenderName, customRecipientName);
+    const msg = generateZaloMessage(link, customSenderName);
+    copyToClipboard(msg, "Đã copy tin nhắn Zalo kèm link thiệp! Hãy dán gửi ngay nhé 💌", "💬");
   });
 }
 

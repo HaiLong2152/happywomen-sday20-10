@@ -17,7 +17,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <!-- Cache-busting v=2.5 đảm bảo điện thoại tải phiên bản mới nhất -->
+  <link rel="stylesheet" href="style.css?v=2.5">
 </head>
 <body>
   <!-- Hiệu ứng Canvas cánh hoa hồng & trái tim rơi -->
@@ -55,16 +56,16 @@
           <span>🌸 Mở Thiệp Ngay (Không Cần Ảnh)</span>
         </button>
       </div>
-      <p class="welcome-note">*(Ảnh chỉ hiển thị trên máy của bạn và có thể đổi bất kỳ lúc nào)*</p>
+      <p class="welcome-note">*(Ảnh chỉ lưu trên máy bạn và có thể đổi bất kỳ lúc nào)*</p>
     </div>
   </div>
 
-  <!-- Modal 2: Hiển Thị & Tải Mã QR Thiệp Chúc Mừng -->
+  <!-- Modal 2: Popup Lấy Mã QR & Link Chia Sẻ (Ẩn trong popup, không làm rối thiệp) -->
   <div id="qrModal" class="qr-modal hidden" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
     <div class="qr-modal-backdrop"></div>
     <div class="qr-modal-card glass-panel">
       <button id="closeQrModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
-      <div class="qr-badge">📱 QUÉT MÃ MỞ THIỆP 20/10</div>
+      <div class="qr-badge">📱 MÃ QR & LINK CHIA SẺ 20/10</div>
       <h3 class="qr-modal-title" id="qrModalTitle">Mã QR Thiệp Chúc Mừng 20/10</h3>
       <p class="qr-modal-desc" id="qrModalDesc">
         Dùng Camera điện thoại hoặc Zalo quét mã để mở ngay thiệp chúc mừng yêu thương:
@@ -82,8 +83,17 @@
         <button id="copyQrLinkBtn" class="btn btn-secondary btn-sm">
           <span>📋 Sao Chép Link Web</span>
         </button>
+        <button id="copyZaloMsgBtn" class="btn btn-secondary btn-sm">
+          <span>💬 Copy Tin Nhắn Zalo</span>
+        </button>
       </div>
-      <p class="qr-print-tip">
+
+      <div class="sender-name-group" style="margin-top: 12px; text-align: left;">
+        <label for="senderNameInput" style="font-size: 0.8rem; font-weight: 700; color: var(--deep-rose); display: block; margin-bottom: 4px;">✍️ Ký tên bạn vào thiệp (Tùy chọn):</label>
+        <input type="text" id="senderNameInput" placeholder="Ví dụ: Con trai, Anh, Tuấn Hùng, Nhóm bạn..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--soft-rose); font-size: 0.88rem; outline: none;">
+      </div>
+
+      <p class="qr-print-tip" style="margin-top: 10px;">
         💡 <em>Mẹo: Tải ảnh mã QR này để in thiệp, in sticker dán lên bó hoa tươi hoặc hộp quà tặng thật gửi cho người ấy nhé!</em>
       </p>
     </div>
@@ -102,9 +112,12 @@
           <span></span><span></span><span></span>
         </span>
       </button>
-      <button id="navShareBtn" class="icon-btn share-btn" title="Xem mã QR & Chia sẻ thiệp" aria-label="Xem mã QR & Chia sẻ">
-        <span>📱</span> <span>Mã QR & Chia Sẻ</span>
+      <button id="navShareBtn" class="icon-btn" title="Xem mã QR của thiệp này" aria-label="Xem mã QR của thiệp này">
+        <span>📱</span> <span>Mã QR</span>
       </button>
+      <a href="create.html" class="icon-btn share-btn" title="Trang tạo thiệp theo tên riêng">
+        <span>✨</span> <span>Tạo Thiệp Mới</span>
+      </a>
     </div>
   </header>
 
@@ -121,7 +134,7 @@
       </p>
     </section>
 
-    <!-- Khu vực Phong Thư Tương Tác (Interactive Envelope) -->
+    <!-- Khu vực Phong Thư Tương Tác 3D (Focal Point của trang) -->
     <section class="envelope-section">
       <div class="envelope-container" id="envelopeContainer">
         <!-- Phong bì ngoài -->
@@ -130,7 +143,7 @@
           <div class="envelope-pocket"></div>
           
           <!-- Con dấu sáp niêm phong -->
-          <div class="wax-seal" id="waxSeal" role="button" tabindex="0" title="Bấm vào để mở thiệp chúc mừng">
+          <div class="wax-seal" id="waxSeal" role="button" tabindex="0" title="Chạm vào để mở thiệp chúc mừng">
             <span class="seal-heart">🌹</span>
             <span class="seal-text">MỞ THIỆP</span>
           </div>
@@ -186,7 +199,14 @@
           </article>
         </div>
       </div>
+
       <p class="envelope-hint" id="envelopeHint">👇 Chạm vào con dấu sáp <strong>[MỞ THIỆP]</strong> để khám phá lời chúc bí mật!</p>
+      
+      <div class="envelope-preview-action" style="margin-top: 14px; text-align: center;">
+        <button id="toggleEnvelopeBtn" class="btn btn-primary btn-sm" title="Bấm để mở hoặc đóng phong bì xem trước">
+          <span>👁️ Mở Thiệp Xem Thử</span>
+        </button>
+      </div>
     </section>
 
     <!-- Quẻ May Mắn & Thông Điệp 20/10 -->
@@ -274,77 +294,7 @@
             <p id="photoCaption">"Vì phụ nữ là để yêu thương trọn đời!"</p>
           </div>
         </div>
-
-        <div class="frame-controls" id="frameControls">
-          <h3>🖼️ Ảnh Kỷ Niệm 20/10</h3>
-          <p>Bạn có thể tải lên một bức ảnh rạng rỡ của mình (hoặc người bạn yêu thương) để dán vào góc thiệp và khung kỷ niệm:</p>
-          <label for="imageUploadInput" class="btn btn-secondary upload-label">
-            <span>📷 Tải Lên Ảnh Của Bạn</span>
-            <input type="file" id="imageUploadInput" accept="image/*" class="sr-only">
-          </label>
-          <button id="resetPhotoBtn" class="btn-text">Đặt lại ảnh hoa mặc định</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Khu Vực: Chia Sẻ Thiệp & Mã QR (Gọn gàng, tinh tế, 100% Offline) -->
-    <section id="shareSection" class="share-hub-section glass-panel">
-      <div class="share-hub-header">
-        <span class="share-hub-badge">📱 CHIA SẺ & MÃ QR 20/10</span>
-        <h2 class="section-title">Trao Gửi Tấm Thiệp Này Đến Những Người Phụ Nữ Yêu Thương</h2>
-        <p class="share-hub-desc">
-          Sao chép link hoặc tải mã QR để in thiệp, dán lên bó hoa tươi, hộp quà tặng thật, hoặc chia sẻ lên Zalo/Facebook gửi tới những người phụ nữ tuyệt vời!
-        </p>
-      </div>
-
-      <div class="share-hub-grid">
-        <!-- Cột Trái: Link & Lời Nhắn Zalo & Ký Tên -->
-        <div class="share-left-col">
-          <!-- Nhập tên người gửi (Tùy chọn) -->
-          <div class="sender-input-box">
-            <label for="senderNameInput" class="share-label">✍️ Tên người gửi (Tùy chọn - để ký tên vào thiệp):</label>
-            <input type="text" id="senderNameInput" placeholder="Ví dụ: Con trai, Anh, Tuấn Hùng, Nhóm bạn thân..." maxlength="50">
-          </div>
-
-          <!-- Link Web trực tiếp -->
-          <div class="share-link-group">
-            <label class="share-label">🔗 Đường link thiệp chúc mừng:</label>
-            <div class="share-input-row">
-              <input type="text" id="shareLinkInput" readonly value="" class="share-url-input">
-              <button id="copyShareLinkBtn" class="btn btn-primary btn-sm">
-                📋 Sao Chép Link
-              </button>
-            </div>
-          </div>
-
-          <!-- Lời nhắn Zalo soạn sẵn -->
-          <div class="zalo-preview-box">
-            <div class="zalo-box-header">
-              <span>💬 Lời nhắn Zalo / Messenger soạn sẵn:</span>
-              <button id="copyZaloMsgBtn" class="btn-text">📋 Copy tin nhắn</button>
-            </div>
-            <div id="zaloMessageContent" class="zalo-box-content"></div>
-          </div>
-        </div>
-
-        <!-- Cột Phải: Mã QR Trực Tiếp -->
-        <div class="share-right-col">
-          <div class="qr-showcase-card">
-            <div id="shareQrCodeBox" class="share-qr-box"></div>
-            <span class="qr-showcase-tag">📱 Quét QR bằng Zalo / Camera</span>
-            <div class="qr-showcase-actions">
-              <button id="downloadShareQrBtn" class="btn btn-primary btn-sm" title="Tải ảnh mã QR PNG">
-                ⬇️ Tải Ảnh QR (PNG)
-              </button>
-              <button id="enlargeShareQrBtn" class="btn btn-secondary btn-sm" title="Phóng to mã QR">
-                🔍 Phóng To
-              </button>
-            </div>
-            <p class="qr-tip-text">
-              💡 <em>In mã QR này dán lên bó hoa hoặc hộp quà tặng thật sẽ tạo bất ngờ rất lớn!</em>
-            </p>
-          </div>
-        </div>
+        <input type="file" id="imageUploadInput" accept="image/*" class="sr-only">
       </div>
     </section>
 
@@ -362,8 +312,11 @@
           <span>🎆 Bắn Pháo Hoa Chúc Mừng</span>
         </button>
         <button id="footerShareBtn" class="btn btn-secondary">
-          <span>📱 Xem Mã QR & Link Chia Sẻ</span>
+          <span>📱 Mã QR Thiệp Này</span>
         </button>
+        <a href="create.html" class="btn btn-secondary">
+          <span>✨ Tự Tạo Thiệp Theo Tên Riêng</span>
+        </a>
       </div>
 
       <p class="copyright">
@@ -380,6 +333,7 @@
 
   <!-- Thư viện tạo mã QR offline 100% -->
   <script src="qrcode.min.js"></script>
-  <script src="script.js"></script>
+  <!-- Cache-busting v=2.5 -->
+  <script src="script.js?v=2.5"></script>
 </body>
 </html>
