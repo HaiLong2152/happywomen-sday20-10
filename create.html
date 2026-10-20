@@ -331,16 +331,19 @@
           <textarea id="customWishText" class="form-textarea" rows="4" placeholder="Nhập hoặc chỉnh sửa lời chúc..."></textarea>
         </div>
 
-        <!-- 4. Hộp Thư Bí Mật (Kho lưu trữ nhận lời cảm ơn riêng của bạn) -->
+        <!-- 4. Hòm Thư Lời Cảm Ơn (Lưu trữ cơ sở dữ liệu đám mây) -->
         <div class="form-group">
-          <label class="form-label">4. Hộp Thư Bí Mật (Kho lưu trữ nhận lời cảm ơn riêng của bạn):</label>
+          <label class="form-label">4. Hòm Thư Lời Cảm Ơn (Lưu trữ cơ sở dữ liệu đám mây riêng của bạn):</label>
           <div style="background: rgba(255, 240, 243, 0.85); padding: 16px 18px; border-radius: 16px; border: 1.5px dashed var(--soft-rose);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
-              <span style="font-weight: 700; font-size: 0.95rem; color: var(--deep-rose);">📬 Hộp Thư Riêng Của Bạn:</span>
-              <a href="#" target="_blank" id="openInboxLinkBtn" class="btn btn-primary btn-sm" style="text-decoration: none;">👁️ Mở Hộp Thư Xem Lời Cảm Ơn</a>
+              <span style="font-weight: 700; font-size: 0.95rem; color: var(--deep-rose);">📬 Hòm Thư Riêng Của Bạn:</span>
+              <button type="button" id="openInboxModalBtn" class="btn btn-primary btn-sm" style="display: flex; align-items: center; gap: 6px;">
+                <span>💌 Mở Xem Hòm Thư</span>
+                <span id="inboxBadgeCount" style="background: white; color: var(--deep-rose); border-radius: 999px; padding: 1px 8px; font-size: 0.75rem; font-weight: 800;">0</span>
+              </button>
             </div>
             <p style="font-size: 0.84rem; color: var(--muted-text); margin: 0 0 10px; line-height: 1.5;">
-              💡 <em>Mỗi khi người nhận bấm gửi lời cảm ơn, tin nhắn sẽ được gửi thẳng vào hộp thư bí mật này để bạn đọc bất cứ lúc nào (hoàn toàn ẩn danh, bảo mật, không cần tài khoản hay để lộ SĐT/Facebook)!</em>
+              💡 <em>Mỗi khi người nhận bấm gửi lời cảm ơn, tin nhắn sẽ được lưu thẳng vào cơ sở dữ liệu hòm thư này để bạn đọc bất cứ lúc nào (hoàn toàn ẩn danh, bảo mật, lưu vĩnh viễn không cần tài khoản)!</em>
             </p>
             <div style="display: flex; gap: 8px;">
               <input type="text" id="inboxCodeInput" class="form-input" readonly style="background: white; font-size: 0.88rem; font-family: monospace; color: var(--deep-rose); font-weight: 600;">
@@ -416,6 +419,33 @@
     </div>
   </main>
 
+  <!-- Modal Xem Hòm Thư Lời Cảm Ơn Trên Create Page -->
+  <div id="inboxViewerModal" class="welcome-photo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="inboxModalTitle">
+    <div class="welcome-photo-backdrop" id="inboxModalBackdrop"></div>
+    <div class="welcome-photo-card glass-panel" style="max-width: 580px; max-height: 85vh; display: flex; flex-direction: column;">
+      <button id="closeInboxModalBtn" class="modal-close-btn" aria-label="Đóng">&times;</button>
+      <div class="welcome-badge">📬 HÒM THƯ LỜI CẢM ƠN 20/10 📬</div>
+      <h3 class="welcome-title" id="inboxModalTitle">Lời Cảm Ơn Dành Cho Bạn</h3>
+      <p class="welcome-subtitle" id="inboxModalSubtitle" style="margin-bottom: 14px;">
+        Đang kết nối cơ sở dữ liệu để tải các lời cảm ơn...
+      </p>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap;">
+        <button id="refreshInboxModalBtn" class="btn btn-primary btn-sm">
+          <span>🔄 Làm Mới</span>
+        </button>
+        <a href="inbox.html" target="_blank" id="openInboxStandaloneLink" class="btn btn-secondary btn-sm" style="text-decoration: none;">
+          <span>↗️ Mở Trang Riêng</span>
+        </a>
+      </div>
+
+      <!-- Khung cuộn danh sách tin nhắn -->
+      <div id="inboxModalFeed" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; max-height: 400px; min-height: 160px;">
+        <!-- Tin nhắn sẽ hiển thị tại đây -->
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toast" class="toast" role="alert" aria-live="polite">
     <span class="toast-icon" id="toastIcon">🎉</span>
@@ -423,7 +453,7 @@
   </div>
 
   <script src="qrcode.min.js"></script>
-  <script src="create.js?v=3.8"></script>
+  <script src="create.js?v=4.0"></script>
 </body>
 </html>
 

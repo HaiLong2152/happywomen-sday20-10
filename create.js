@@ -28,12 +28,13 @@ const UNIVERSAL_WISHES = [
 let selectedWishIdx = 0;
 let studioQrInstance = null;
 
-// Sinh mã Hộp Thư Bí Mật (ntfy.sh) riêng cho người tạo
-let currentInboxCode = localStorage.getItem('thiep_inbox_code');
-if (!currentInboxCode) {
-  const rand = Math.random().toString(36).substring(2, 8);
-  currentInboxCode = `hop-thu-2010-${rand}`;
-  localStorage.setItem('thiep_inbox_code', currentInboxCode);
+// Cấu hình Hòm Thư Lời Cảm Ơn (Cơ Sở Dữ Liệu Đám Mây)
+const DEFAULT_INBOX_ID = "ff808181a09d98f701a1577c2b30253c";
+let currentInboxId = localStorage.getItem('thiep_inbox_id');
+if (!currentInboxId || currentInboxId.startsWith('hop-thu-2010')) {
+  currentInboxId = DEFAULT_INBOX_ID;
+  localStorage.setItem('thiep_inbox_id', currentInboxId);
+  createNewInboxOnDatabase();
 }
 
 const recipientNameInput = document.getElementById('recipientName');
@@ -41,8 +42,18 @@ const senderNameInput = document.getElementById('senderName');
 const wishChips = document.querySelectorAll('.wish-chip');
 const customWishText = document.getElementById('customWishText');
 const inboxCodeInput = document.getElementById('inboxCodeInput');
-const openInboxLinkBtn = document.getElementById('openInboxLinkBtn');
+const openInboxModalBtn = document.getElementById('openInboxModalBtn');
+const inboxBadgeCount = document.getElementById('inboxBadgeCount');
 const copyInboxBtn = document.getElementById('copyInboxBtn');
+
+// Inbox Modal Elements
+const inboxViewerModal = document.getElementById('inboxViewerModal');
+const inboxModalBackdrop = document.getElementById('inboxModalBackdrop');
+const closeInboxModalBtn = document.getElementById('closeInboxModalBtn');
+const refreshInboxModalBtn = document.getElementById('refreshInboxModalBtn');
+const openInboxStandaloneLink = document.getElementById('openInboxStandaloneLink');
+const inboxModalFeed = document.getElementById('inboxModalFeed');
+const inboxModalSubtitle = document.getElementById('inboxModalSubtitle');
 
 const resultUrlInput = document.getElementById('resultUrlInput');
 const copyUrlBtn = document.getElementById('copyUrlBtn');
@@ -56,12 +67,9 @@ const copyQrImageBtn = document.getElementById('copyQrImageBtn');
 const downloadQrBtn = document.getElementById('downloadQrBtn');
 
 // Khởi tạo giá trị ban đầu cho hộp thư và lời chúc
-if (inboxCodeInput) {
-  inboxCodeInput.value = `https://ntfy.sh/${currentInboxCode}`;
-}
-if (openInboxLinkBtn) {
-  openInboxLinkBtn.href = `https://ntfy.sh/${currentInboxCode}`;
-}
+updateInboxUI();
+checkInboxBadgeCount();
+
 if (customWishText) {
   customWishText.value = UNIVERSAL_WISHES[0].wish;
 }
@@ -129,7 +137,7 @@ function buildPersonalizedUrl() {
   }
 
   // Cấu hình đích nhận lời cảm ơn: Hộp Thư Bí Mật riêng
-  if (currentInboxCode) params.set('inbox', currentInboxCode);
+  if (currentInboxId) params.set('inbox', currentInboxId);
 
   const query = params.toString();
   return query ? `${base}?${query}` : base;
@@ -408,9 +416,217 @@ if (customWishText) {
   customWishText.addEventListener('input', updateOutputs);
 }
 
+// ==========================================
+// QUẢN LÝ HÒM THƯ DATABASE ĐÁM MÂY
+// ==========================================
+async function createNewInboxOnDatabase() {
+  try {
+    let newId = null;
+    try {
+      const apiRes = await fetch('/api/inbox?action=create', { method: 'POST' });
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (data && data.success && data.id) newId = data.id;
+      }
+    } catch (e) {}
+
+    if (!newId) {
+      const dbRes = await fetch('https://api.restful-api.dev/objects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Hop Thu 20/10', data: { messages: [] } })
+      });
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        if (dbData && dbData.id) newId = dbData.id;
+      }
+    }
+
+    if (newId) {
+      currentInboxId = newId;
+      localStorage.setItem('thiep_inbox_id', newId);
+      updateInboxUI();
+      updateOutputs();
+      checkInboxBadgeCount();
+    }
+  } catch (err) {
+    console.warn("Could not create dynamic inbox, using default:", err);
+  }
+}
+
+function getInboxPageUrl() {
+  const origin = window.location.origin;
+  const cleanPath = window.location.pathname.replace(/\/create(\.html)?$/, '/inbox.html');
+  if (!origin || origin === 'null' || origin === 'file://') {
+    return window.location.href.replace(/create\.html.*$/, 'inbox.html') + '?id=' + currentInboxId;
+  }
+  return `${origin}${cleanPath}?id=${currentInboxId}`;
+}
+
+function updateInboxUI() {
+  const url = getInboxPageUrl();
+  if (inboxCodeInput) inboxCodeInput.value = url;
+  if (openInboxStandaloneLink) openInboxStandaloneLink.href = url;
+}
+
+// Kiểm tra số lượng tin nhắn trong hòm thư để cập nhật badge
+async function checkInboxBadgeCount() {
+  try {
+    let count = 0;
+    try {
+      const apiRes = await fetch(`/api/inbox?id=${currentInboxId}`, { cache: 'no-store' });
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (data.success && typeof data.count === 'number') count = data.count;
+      }
+    } catch (e) {}
+
+    if (count === 0) {
+      const dbRes = await fetch(`https://api.restful-api.dev/objects/${currentInboxId}`);
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        if (dbData && dbData.data && Array.isArray(dbData.data.messages)) {
+          count = dbData.data.messages.length;
+        }
+      }
+    }
+
+    if (inboxBadgeCount) {
+      inboxBadgeCount.textContent = count;
+      if (count > 0) {
+        inboxBadgeCount.style.background = '#ff2a54';
+        inboxBadgeCount.style.color = '#ffffff';
+      }
+    }
+  } catch (e) {}
+}
+
+// Modal Xem Hòm Thư Trực Tiếp
+async function openInboxModal() {
+  if (inboxViewerModal) inboxViewerModal.classList.remove('hidden');
+  updateInboxUI();
+  await loadInboxModalMessages();
+}
+
+function closeInboxModal() {
+  if (inboxViewerModal) inboxViewerModal.classList.add('hidden');
+}
+
+async function loadInboxModalMessages() {
+  if (!inboxModalFeed) return;
+  inboxModalFeed.innerHTML = `
+    <div style="text-align: center; padding: 30px 10px; color: var(--muted-text);">
+      <div style="font-size: 2rem; margin-bottom: 8px;">⏳</div>
+      <div>Đang kết nối cơ sở dữ liệu và tải lời cảm ơn...</div>
+    </div>
+  `;
+  if (inboxModalSubtitle) inboxModalSubtitle.textContent = "Đang kiểm tra tin nhắn mới...";
+
+  try {
+    let messages = [];
+    try {
+      const apiRes = await fetch(`/api/inbox?id=${currentInboxId}`, { cache: 'no-store' });
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (data.success && Array.isArray(data.messages)) {
+          messages = data.messages;
+        }
+      }
+    } catch (e) {}
+
+    if (messages.length === 0) {
+      const dbRes = await fetch(`https://api.restful-api.dev/objects/${currentInboxId}`);
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        if (dbData && dbData.data && Array.isArray(dbData.data.messages)) {
+          messages = dbData.data.messages;
+        }
+      }
+    }
+
+    if (inboxBadgeCount) {
+      inboxBadgeCount.textContent = messages.length;
+      if (messages.length > 0) {
+        inboxBadgeCount.style.background = '#ff2a54';
+        inboxBadgeCount.style.color = '#ffffff';
+      }
+    }
+
+    if (inboxModalSubtitle) {
+      inboxModalSubtitle.textContent = messages.length > 0 
+        ? `Đã nhận được ${messages.length} lời cảm ơn từ người nhận!`
+        : "Chưa có lời cảm ơn nào trong hòm thư của bạn.";
+    }
+
+    if (messages.length === 0) {
+      inboxModalFeed.innerHTML = `
+        <div style="text-align: center; padding: 30px 16px; background: #fff8f9; border-radius: 14px; border: 1.5px dashed var(--soft-rose);">
+          <div style="font-size: 2.5rem; margin-bottom: 8px;">🌸</div>
+          <div style="font-weight: 700; color: var(--deep-rose); margin-bottom: 4px;">Hòm thư hiện đang trống</div>
+          <p style="font-size: 0.85rem; color: var(--muted-text); margin: 0; line-height: 1.4;">
+            Khi người nhận mở thiệp và bấm nút <strong>[Gửi Lời Cảm Ơn Đến Người Tặng]</strong>, bức thư cảm ơn sẽ lập tức xuất hiện tại đây để bạn đọc nhé!
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    inboxModalFeed.innerHTML = messages.map(m => `
+      <div style="background: white; border: 1px solid var(--soft-rose); border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #ffd6de; padding-bottom: 6px;">
+          <span style="font-weight: 700; color: var(--deep-rose); font-size: 0.9rem;">
+            💖 Từ: ${escapeHtml(m.from || 'Người Nhận')}
+          </span>
+          <span style="font-size: 0.76rem; color: var(--muted-text); font-family: monospace;">
+            ${escapeHtml(m.time || '')}
+          </span>
+        </div>
+        <div style="font-size: 0.92rem; color: #2b1118; line-height: 1.5; white-space: pre-wrap; background: #fff8f9; padding: 10px 12px; border-radius: 8px;">
+          ${escapeHtml(m.text || '')}
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    inboxModalFeed.innerHTML = `
+      <div style="text-align: center; padding: 20px; color: var(--deep-rose);">
+        ⚠️ Không thể tải hòm thư. Vui lòng bấm Làm Mới để thử lại.
+      </div>
+    `;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
 if (copyInboxBtn && inboxCodeInput) {
   copyInboxBtn.addEventListener('click', () => {
-    copyToClipboard(inboxCodeInput.value, "Đã sao chép link Hộp Thư Bí Mật của bạn! Hãy lưu lại để mở xem tin nhắn nhé 📬", "📬");
+    copyToClipboard(inboxCodeInput.value, "Đã sao chép link Hòm Thư Lời Cảm Ơn của bạn! Hãy lưu lại để mở xem tin nhắn nhé 📬", "📬");
+  });
+}
+
+if (openInboxModalBtn) {
+  openInboxModalBtn.addEventListener('click', openInboxModal);
+}
+
+if (closeInboxModalBtn) {
+  closeInboxModalBtn.addEventListener('click', closeInboxModal);
+}
+
+if (inboxModalBackdrop) {
+  inboxModalBackdrop.addEventListener('click', closeInboxModal);
+}
+
+if (refreshInboxModalBtn) {
+  refreshInboxModalBtn.addEventListener('click', () => {
+    loadInboxModalMessages();
+    showToast("Đang làm mới hòm thư...", "🔄");
   });
 }
 

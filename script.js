@@ -628,7 +628,7 @@ function openThankYouModal() {
   }
 
   if (sendInboxBtnText) {
-    sendInboxBtnText.textContent = `💌 Gửi Vào Hộp Thư Bí Mật Của ${who}`;
+    sendInboxBtnText.textContent = `💌 Gửi Vào Hòm Thư Của ${who}`;
   }
 
   if (thankYouModal) {
@@ -658,7 +658,63 @@ if (thankChips) {
   });
 }
 
-// Hành động gửi Hộp Thư Bí Mật (ntfy.sh)
+// ==========================================
+// GỬI LỜI CẢM ƠN VÀO CƠ SỞ DỮ LIỆU ĐÁM MÂY
+// ==========================================
+const DEFAULT_INBOX_ID = "ff808181a09d98f701a1577c2b30253c";
+
+async function saveThankYouToDatabase(inboxId, newMsg) {
+  const targetId = inboxId || DEFAULT_INBOX_ID;
+
+  // 1. Thử qua Vercel API (/api/inbox)
+  try {
+    const apiRes = await fetch('/api/inbox', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: targetId,
+        message: newMsg
+      })
+    });
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      if (data && data.success) return true;
+    }
+  } catch (apiErr) {
+    console.warn("API route error, trying direct database fallback:", apiErr);
+  }
+
+  // 2. Fallback trực tiếp vào Database Cloud REST API
+  try {
+    let messages = [];
+    const getRes = await fetch(`https://api.restful-api.dev/objects/${targetId}`);
+    if (getRes.ok) {
+      const existingData = await getRes.json();
+      if (existingData && existingData.data && Array.isArray(existingData.data.messages)) {
+        messages = existingData.data.messages;
+      }
+    }
+    messages.unshift(newMsg);
+
+    const putRes = await fetch(`https://api.restful-api.dev/objects/${targetId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Hop Thu 20/10',
+        data: {
+          updatedTime: new Date().toISOString(),
+          messages: messages
+        }
+      })
+    });
+    return putRes.ok;
+  } catch (dbErr) {
+    console.error("Direct database error:", dbErr);
+    return false;
+  }
+}
+
+// Hành động gửi Hòm Thư Database
 if (sendInboxActionBtn) {
   sendInboxActionBtn.addEventListener('click', async () => {
     const text = thankMessageInput ? thankMessageInput.value.trim() : '';
@@ -666,34 +722,37 @@ if (sendInboxActionBtn) {
       showToast("Vui lòng nhập lời cảm ơn!", "⚠️");
       return;
     }
-    const recipientTitle = customRecipientName ? `từ ${customRecipientName}` : "từ Người Nhận";
-    const senderTitle = customSenderName ? `gửi đến ${customSenderName}` : "";
-    const targetTopic = creatorInbox || 'hop-thu-2010-chung';
+
+    const fromName = customRecipientName ? customRecipientName : "Người Nhận Ẩn Danh";
+    const newMsg = {
+      from: fromName,
+      text: text,
+      time: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+      timestamp: Date.now()
+    };
 
     const originalText = sendInboxActionBtn.innerHTML;
     sendInboxActionBtn.disabled = true;
-    sendInboxActionBtn.innerHTML = '<span>⏳ Đang gửi lời nhắn...</span>';
+    sendInboxActionBtn.innerHTML = '<span>⏳ Đang gửi vào hòm thư...</span>';
 
     try {
-      await fetch(`https://ntfy.sh/${targetTopic}`, {
-        method: 'POST',
-        body: text,
-        headers: {
-          'Title': `💖 Lời cảm ơn 20/10 ${recipientTitle} ${senderTitle}`.trim(),
-          'Tags': 'heart,gift,blush',
-          'Priority': 'default'
-        }
-      });
-      showToast("Đã gửi lời cảm ơn vào Hộp Thư Bí Mật thành công! 💌", "💖");
+      const success = await saveThankYouToDatabase(creatorInbox, newMsg);
+      if (success) {
+        showToast("Đã gửi lời cảm ơn vào hòm thư người tặng thành công! 💖", "💌");
+        sendInboxActionBtn.innerHTML = '<span>✅ Đã gửi thành công!</span>';
+      } else {
+        throw new Error("Không thể kết nối cơ sở dữ liệu");
+      }
     } catch (e) {
-      copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy gửi cho người tặng nhé 💌", "💖");
+      copyToClipboard(text, "Đã sao chép lời cảm ơn! Hãy dán gửi cho người tặng nhé 💌", "💖");
     } finally {
-      sendInboxActionBtn.disabled = false;
-      sendInboxActionBtn.innerHTML = originalText;
+      setTimeout(() => {
+        sendInboxActionBtn.disabled = false;
+        sendInboxActionBtn.innerHTML = originalText;
+        triggerRoseRain();
+        closeThankYouModal();
+      }, 1000);
     }
-
-    triggerRoseRain();
-    closeThankYouModal();
   });
 }
 

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📬 Hòm Thư Lời Cảm Ơn 20/10 • Ngày Phụ Nữ Việt Nam</title>
+  
+  <meta name="description" content="Xem tất cả lời cảm ơn ngọt ngào và chân thành được gửi về hòm thư bí mật 20/10 của bạn.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📬</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=3.9">
+  <style>
+    .inbox-container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    .inbox-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      box-shadow: 0 15px 45px rgba(201, 24, 74, 0.12);
+    }
+    .inbox-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .inbox-badge {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      background: #ffe3e8;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .inbox-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      color: var(--deep-rose);
+      margin-bottom: 8px;
+    }
+    .inbox-desc {
+      font-size: 0.92rem;
+      color: var(--muted-text);
+      line-height: 1.5;
+    }
+    .inbox-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(255, 240, 243, 0.7);
+      padding: 12px 18px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--soft-rose);
+    }
+    .inbox-count-tag {
+      font-weight: 700;
+      color: var(--deep-rose);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .inbox-actions-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .message-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .msg-item {
+      background: white;
+      border: 1.5px solid var(--soft-rose);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 0 4px 16px rgba(201, 24, 74, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+    .msg-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201, 24, 74, 0.12);
+    }
+    .msg-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed rgba(255, 143, 163, 0.4);
+      padding-bottom: 8px;
+    }
+    .msg-sender {
+      font-weight: 700;
+      color: var(--deep-rose);
+      font-size: 0.96rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .msg-time {
+      font-size: 0.78rem;
+      color: var(--muted-text);
+      font-family: monospace;
+    }
+    .msg-body {
+      font-family: var(--font-sans);
+      font-size: 0.96rem;
+      color: #2b1118;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #fff8f9;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-pink);
+    }
+    .empty-inbox {
+      text-align: center;
+      padding: 40px 20px;
+      background: #fffafa;
+      border-radius: 18px;
+      border: 2px dashed var(--soft-rose);
+    }
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+    .empty-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      margin-bottom: 6px;
+    }
+    .empty-desc {
+      font-size: 0.88rem;
+      color: var(--muted-text);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hiệu ứng cánh hoa rơi Canvas -->
+  <canvas id="petalCanvas" aria-hidden="true"></canvas>
+
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="brand-badge">
+      <span class="pulse-dot"></span> <span>20 · 10 · HÒM THƯ LỜI CẢM ƠN</span>
+    </div>
+    <div class="nav-actions">
+      <a href="create.html" class="icon-btn" title="Quay lại Studio tạo thiệp">
+        <span>✨</span> <span>Tạo Thiệp Mới</span>
+      </a>
+      <a href="index.html" class="icon-btn" title="Xem trang thiệp trực tiếp">
+        <span>👁️</span> <span>Xem Thiệp Gốc</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="inbox-container">
+    <div class="inbox-card">
+      <header class="inbox-header">
+        <span class="inbox-badge">📬 KHO LƯU TRỮ LỜI CẢM ƠN 20/10</span>
+        <h1 class="inbox-title">Hòm Thư Bí Mật Của Bạn</h1>
+        <p class="inbox-desc">
+          Đây là nơi lưu giữ tất cả những lời cảm ơn ấm áp, nụ cười và tình cảm trân quý từ người phụ nữ tuyệt vời đã nhận được tấm thiệp của bạn!
+        </p>
+      </header>
+
+      <!-- Thanh điều khiển Hòm thư -->
+      <div class="inbox-controls">
+        <div class="inbox-count-tag" id="inboxCountTag">
+          <span>💌</span> <span id="inboxCountText">Đang tải tin nhắn...</span>
+        </div>
+        <div class="inbox-actions-row">
+          <button id="refreshInboxBtn" class="btn btn-primary btn-sm">
+            <span>🔄 Làm Mới</span>
+          </button>
+          <button id="copyInboxLinkBtn" class="btn btn-secondary btn-sm">
+            <span>📋 Copy Link Hòm Thư</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Danh sách lời cảm ơn -->
+      <div id="messageFeed" class="message-feed">
+        <div class="empty-inbox" id="loadingState">
+          <div class="empty-icon">⏳</div>
+          <div class="empty-title">Đang kết nối cơ sở dữ liệu...</div>
+          <p class="empty-desc">Vui lòng chờ giây lát để tải những lời cảm ơn về nhé!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert" aria-live="polite">
+    <span class="toast-icon" id="toastIcon">🌸</span>
+    <span class="toast-msg" id="toastMsg">Đã cập nhật!</span>
+  </div>
+
+  <script>
+    const DEFAULT_INBOX_ID = "ff808181a09d98f701a1577c2b30253c";
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentInboxId = urlParams.get('id') || localStorage.getItem('thiep_inbox_id') || DEFAULT_INBOX_ID;
+
+    const messageFeed = document.getElementById('messageFeed');
+    const inboxCountText = document.getElementById('inboxCountText');
+    const refreshInboxBtn = document.getElementById('refreshInboxBtn');
+    const copyInboxLinkBtn = document.getElementById('copyInboxLinkBtn');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastIcon = document.getElementById('toastIcon');
+
+    function showToast(msg, icon = "🌸") {
+      if (!toast) return;
+      toastMsg.textContent = msg;
+      toastIcon.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function copyToClipboard(text, msg) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => showToast(msg, "📋"));
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(msg, "📋");
+      }
+    }
+
+    async function loadMessages() {
+      inboxCountText.textContent = "Đang tải dữ liệu...";
+      refreshInboxBtn.disabled = true;
+
+      try {
+        let messages = [];
+        // Thử lấy qua Vercel API trước
+        try {
+          const apiRes = await fetch(`/api/inbox?id=${currentInboxId}`, { cache: 'no-store' });
+          if (apiRes.ok) {
+            const data = await apiRes.json();
+            if (data.success && Array.isArray(data.messages)) {
+              messages = data.messages;
+            }
+          }
+        } catch (e) {
+          console.warn("API route error, falling back to direct DB", e);
+        }
+
+        // Nếu API route chưa có dữ liệu, fallback trực tiếp vào database
+        if (messages.length === 0) {
+          const dbRes = await fetch(`https://api.restful-api.dev/objects/${currentInboxId}`);
+          if (dbRes.ok) {
+            const dbData = await dbRes.json();
+            if (dbData && dbData.data && Array.isArray(dbData.data.messages)) {
+              messages = dbData.data.messages;
+            }
+          }
+        }
+
+        renderMessages(messages);
+      } catch (err) {
+        console.error("Load messages failed:", err);
+        messageFeed.innerHTML = `
+          <div class="empty-inbox">
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-title">Không thể tải hòm thư</div>
+            <p class="empty-desc">Vui lòng kiểm tra lại kết nối mạng và bấm nút Làm Mới để thử lại nhé!</p>
+          </div>
+        `;
+        inboxCountText.textContent = "Lỗi kết nối";
+      } finally {
+        refreshInboxBtn.disabled = false;
+      }
+    }
+
+    function renderMessages(messages) {
+      if (!messages || messages.length === 0) {
+        inboxCountText.textContent = "Chưa có lời cảm ơn nào";
+        messageFeed.innerHTML = `
+          <div class="empty-inbox">
+            <div class="empty-icon">🌸</div>
+            <div class="empty-title">Hòm thư hiện đang trống</div>
+            <p class="empty-desc">
+              Khi người nhận mở thiệp và bấm nút <strong>[Gửi Lời Cảm Ơn Đến Người Tặng]</strong>, bức thư cảm ơn sẽ lập tức xuất hiện tại đây để bạn đọc nhé!
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      inboxCountText.textContent = `Đã nhận được ${messages.length} lời cảm ơn`;
+      messageFeed.innerHTML = messages.map((m, idx) => `
+        <article class="msg-item">
+          <div class="msg-meta">
+            <span class="msg-sender">
+              <span>💖</span> <span>Từ: <strong>${escapeHtml(m.from || 'Người Nhận')}</strong></span>
+            </span>
+            <span class="msg-time">${escapeHtml(m.time || '')}</span>
+          </div>
+          <div class="msg-body">${escapeHtml(m.text || '')}</div>
+        </article>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    if (refreshInboxBtn) {
+      refreshInboxBtn.addEventListener('click', () => {
+        loadMessages();
+        showToast("Đang làm mới hòm thư...", "🔄");
+      });
+    }
+
+    if (copyInboxLinkBtn) {
+      copyInboxLinkBtn.addEventListener('click', () => {
+        const fullUrl = window.location.origin + window.location.pathname + '?id=' + currentInboxId;
+        copyToClipboard(fullUrl, "Đã sao chép link hòm thư của bạn! Hãy lưu lại để mở xem nhé 📬");
+      });
+    }
+
+    // Hiệu ứng cánh hoa rơi Canvas
+    const canvas = document.getElementById('petalCanvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const petals = [];
+      for (let i = 0; i < 24; i++) {
+        petals.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 8 + 6,
+          speedY: Math.random() * 1.0 + 0.5,
+          speedX: Math.random() * 0.8 - 0.4,
+          flip: Math.random() * Math.PI,
+          flipSpeed: Math.random() * 0.03 + 0.01,
+          color: Math.random() > 0.5 ? '#ff4d6d' : '#ff758f'
+        });
+      }
+
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        petals.forEach(p => {
+          p.y += p.speedY;
+          p.x += Math.sin(p.y * 0.01) + p.speedX;
+          p.flip += p.flipSpeed;
+          if (p.y > canvas.height + 20) {
+            p.y = -20;
+            p.x = Math.random() * canvas.width;
+          }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.scale(Math.sin(p.flip), 1);
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = 0.4;
+          ctx.fill();
+          ctx.restore();
+        });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // Khởi chạy tải tin nhắn
+    document.addEventListener('DOMContentLoaded', loadMessages);
+  </script>
+</body>
+</html>
