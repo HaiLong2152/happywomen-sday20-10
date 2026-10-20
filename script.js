@@ -306,7 +306,7 @@ function initFromURL() {
     customWishText = decodeURIComponent(msgParam).trim();
   }
 
-  creatorInbox = urlParams.get('inbox') || '';
+  creatorInbox = urlParams.get('id') || urlParams.get('inbox') || '';
 
   const photoParam = urlParams.get('photo') || urlParams.get('img');
   if (photoParam && stampImg) {
@@ -322,8 +322,80 @@ function initFromURL() {
   updatePhotoDisplay();
   updateShareSectionOutputs();
 
+  // Tải cấu hình thiệp đã lưu trên database đám mây nếu có mã id/inbox
+  if (creatorInbox) {
+    loadCardConfigFromDatabase(creatorInbox, wishParam !== null, Boolean(msgParam));
+  }
+
   // Hiển thị hộp thoại chào đón & tùy chọn đính kèm ảnh
   checkWelcomePhotoModal();
+}
+
+// Tải thông tin lời chúc riêng biệt từ cơ sở dữ liệu đám mây (giúp URL luôn siêu ngắn)
+async function loadCardConfigFromDatabase(inboxId, hasUrlWishParam, hasUrlMsgParam) {
+  try {
+    let cardData = null;
+    try {
+      const res = await fetch(`/api/inbox?id=${inboxId}`, { cache: 'no-store' });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.card) {
+          cardData = json.card;
+        }
+      }
+    } catch (e) {}
+
+    // Fallback gọi trực tiếp restful-api nếu serverless gặp sự cố
+    if (!cardData) {
+      try {
+        const directRes = await fetch(`https://api.restful-api.dev/objects/${inboxId}`, { cache: 'no-store' });
+        if (directRes.ok) {
+          const directJson = await directRes.json();
+          if (directJson && directJson.data) {
+            cardData = {
+              to: directJson.data.to || '',
+              from: directJson.data.from || '',
+              customWish: directJson.data.customWish || '',
+              wishIdx: directJson.data.wishIdx ?? null
+            };
+          }
+        }
+      } catch (e) {}
+    }
+
+    if (cardData) {
+      let needsUpdate = false;
+      if (cardData.customWish && !hasUrlMsgParam) {
+        customWishText = cardData.customWish.trim();
+        needsUpdate = true;
+      }
+      if (cardData.to && !customRecipientName) {
+        customRecipientName = cardData.to.trim();
+        needsUpdate = true;
+      }
+      if (cardData.from && !customSenderName) {
+        customSenderName = cardData.from.trim();
+        if (senderNameInput) senderNameInput.value = customSenderName;
+        needsUpdate = true;
+      }
+      if (cardData.wishIdx !== null && cardData.wishIdx !== undefined && !hasUrlWishParam) {
+        const idx = parseInt(cardData.wishIdx);
+        if (!isNaN(idx)) {
+          currentWishIndex = Math.abs(idx) % UNIVERSAL_WISHES.length;
+          needsUpdate = true;
+        }
+      }
+      if (needsUpdate) {
+        updateWishDisplay();
+        if (isEnvelopeOpened) {
+          const current = UNIVERSAL_WISHES[currentWishIndex % UNIVERSAL_WISHES.length];
+          startTypewriterEffect(customWishText || current.wish);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Could not load card config from cloud database:", err);
+  }
 }
 
 // Cập nhật link chia sẻ, tin nhắn Zalo và mã QR

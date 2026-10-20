@@ -117,7 +117,7 @@ function getCardBaseUrl() {
   return `${origin}${cleanPath}`;
 }
 
-// Sinh URL cá nhân hóa
+// Sinh URL cá nhân hóa siêu ngắn (Lưu cấu hình thiệp vào Database để link luôn gọn gàng)
 function buildPersonalizedUrl() {
   const base = getCardBaseUrl();
   const to = recipientNameInput ? recipientNameInput.value.trim() : '';
@@ -129,18 +129,75 @@ function buildPersonalizedUrl() {
   if (to) params.set('to', to);
   if (from) params.set('from', from);
 
-  // Nếu người tạo chỉnh sửa lời chúc khác mẫu mặc định: truyền param msg
-  if (wishContent && wishContent !== defaultWish) {
-    params.set('msg', wishContent);
-  } else if (selectedWishIdx > 0) {
+  // Nếu người tạo chọn mẫu (1, 2, 3, 4) và không sửa text: truyền mã mẫu
+  if (wishContent === defaultWish && selectedWishIdx > 0) {
     params.set('wish', selectedWishIdx.toString());
   }
 
-  // Cấu hình đích nhận lời cảm ơn: Hộp Thư Bí Mật riêng
-  if (currentInboxId) params.set('inbox', currentInboxId);
+  // Luôn truyền id của thiệp/hòm thư để người nhận tự động tải lời chúc tùy chỉnh và gửi lời cảm ơn
+  if (currentInboxId) {
+    params.set('id', currentInboxId);
+  }
 
   const query = params.toString();
   return query ? `${base}?${query}` : base;
+}
+
+// Tự động lưu cấu hình thiệp vào Cơ sở dữ liệu đám mây (Debounced)
+let autoSaveCardTimer = null;
+function triggerAutoSaveCard() {
+  if (autoSaveCardTimer) clearTimeout(autoSaveCardTimer);
+  autoSaveCardTimer = setTimeout(() => {
+    saveCardConfigToDatabase();
+  }, 450);
+}
+
+async function saveCardConfigToDatabase() {
+  if (!currentInboxId) return;
+  const to = recipientNameInput ? recipientNameInput.value.trim() : '';
+  const from = senderNameInput ? senderNameInput.value.trim() : '';
+  const wishContent = customWishText ? customWishText.value.trim() : '';
+
+  const payload = {
+    to,
+    from,
+    customWish: wishContent,
+    wishIdx: selectedWishIdx
+  };
+
+  let saved = false;
+  try {
+    const res = await fetch(`/api/inbox?action=save_card&id=${currentInboxId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) saved = true;
+  } catch (e) {}
+
+  if (!saved) {
+    try {
+      let existingData = {};
+      const getRes = await fetch(`https://api.restful-api.dev/objects/${currentInboxId}`);
+      if (getRes.ok) {
+        const json = await getRes.json();
+        if (json && json.data) existingData = json.data;
+      }
+      await fetch(`https://api.restful-api.dev/objects/${currentInboxId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Hop Thu 20/10',
+          data: {
+            ...existingData,
+            ...payload
+          }
+        })
+      });
+    } catch (e) {
+      console.warn("Direct save to restful-api failed:", e);
+    }
+  }
 }
 
 // Sinh tin nhắn Zalo mẫu
@@ -178,6 +235,7 @@ function updateOutputs() {
   if (zaloMsgText) zaloMsgText.textContent = msg;
 
   renderStudioQr(url);
+  triggerAutoSaveCard();
 }
 
 // Vẽ bo góc tương thích mọi trình duyệt
@@ -644,7 +702,8 @@ wishChips.forEach(chip => {
 });
 
 if (copyUrlBtn) {
-  copyUrlBtn.addEventListener('click', () => {
+  copyUrlBtn.addEventListener('click', async () => {
+    saveCardConfigToDatabase();
     const url = resultUrlInput ? resultUrlInput.value : buildPersonalizedUrl();
     const to = recipientNameInput ? recipientNameInput.value.trim() : '';
     copyToClipboard(url, `Đã sao chép link riêng cho ${to || 'người nhận'}!`, "🔗");
@@ -653,6 +712,7 @@ if (copyUrlBtn) {
 
 if (copyZaloBtn) {
   copyZaloBtn.addEventListener('click', () => {
+    saveCardConfigToDatabase();
     const msg = zaloMsgText ? zaloMsgText.textContent : '';
     copyToClipboard(msg, "Đã sao chép lời nhắn Zalo! Hãy dán gửi ngay nhé 💌", "💬");
   });
@@ -660,6 +720,7 @@ if (copyZaloBtn) {
 
 if (openZaloChatBtn) {
   openZaloChatBtn.addEventListener('click', () => {
+    saveCardConfigToDatabase();
     const msg = zaloMsgText ? zaloMsgText.textContent : '';
     copyToClipboard(msg, "Đã sao chép lời nhắn! Đang mở Zalo Web...", "💬");
     setTimeout(() => {
@@ -669,25 +730,36 @@ if (openZaloChatBtn) {
 }
 
 if (shareQrBtn) {
-  shareQrBtn.addEventListener('click', shareQrImage);
+  shareQrBtn.addEventListener('click', async () => {
+    saveCardConfigToDatabase();
+    shareQrImage();
+  });
 }
 
 if (copyQrImageBtn) {
   copyQrImageBtn.addEventListener('click', () => {
+    saveCardConfigToDatabase();
     copyQrImageToClipboard();
   });
 }
 
 if (studioQrBox) {
-  studioQrBox.addEventListener('click', shareQrImage);
+  studioQrBox.addEventListener('click', () => {
+    saveCardConfigToDatabase();
+    shareQrImage();
+  });
 }
 
 if (downloadQrBtn) {
-  downloadQrBtn.addEventListener('click', downloadQrCode);
+  downloadQrBtn.addEventListener('click', () => {
+    saveCardConfigToDatabase();
+    downloadQrCode();
+  });
 }
 
 if (openPreviewTabBtn) {
-  openPreviewTabBtn.addEventListener('click', () => {
+  openPreviewTabBtn.addEventListener('click', async () => {
+    await saveCardConfigToDatabase();
     const url = buildPersonalizedUrl();
     window.open(url, '_blank');
   });
@@ -743,8 +815,48 @@ if (canvas) {
   loop();
 }
 
+// Khôi phục cấu hình thiệp đã lưu nếu người tạo tải lại trang
+async function loadExistingCardConfig() {
+  if (!currentInboxId) return;
+  try {
+    const res = await fetch(`/api/inbox?id=${currentInboxId}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success && data.card) {
+        let changed = false;
+        if (data.card.to && recipientNameInput && !recipientNameInput.value) {
+          recipientNameInput.value = data.card.to;
+          changed = true;
+        }
+        if (data.card.from && senderNameInput && !senderNameInput.value) {
+          senderNameInput.value = data.card.from;
+          changed = true;
+        }
+        if (data.card.wishIdx !== null && data.card.wishIdx !== undefined) {
+          const idx = parseInt(data.card.wishIdx);
+          if (!isNaN(idx) && idx >= 0 && idx < UNIVERSAL_WISHES.length) {
+            selectedWishIdx = idx;
+            wishChips.forEach(chip => {
+              chip.classList.toggle('active', parseInt(chip.getAttribute('data-wish-idx')) === idx);
+            });
+            changed = true;
+          }
+        }
+        if (data.card.customWish && customWishText) {
+          customWishText.value = data.card.customWish;
+          changed = true;
+        }
+        if (changed) {
+          updateOutputs();
+        }
+      }
+    }
+  } catch (e) {}
+}
+
 // Khởi chạy khi load
 document.addEventListener('DOMContentLoaded', () => {
   updateOutputs();
+  loadExistingCardConfig();
 });
 

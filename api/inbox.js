@@ -62,12 +62,19 @@ module.exports = async function handler(req, res) {
       }
 
       const data = await response.json();
-      const messages = (data && data.data && Array.isArray(data.data.messages)) ? data.data.messages : [];
+      const cardData = (data && data.data) ? data.data : {};
+      const messages = Array.isArray(cardData.messages) ? cardData.messages : [];
       return res.status(200).json({
         success: true,
         id: targetId,
         count: messages.length,
-        messages: messages
+        messages: messages,
+        card: {
+          to: cardData.to || '',
+          from: cardData.from || '',
+          customWish: cardData.customWish || '',
+          wishIdx: cardData.wishIdx ?? null
+        }
       });
     } catch (err) {
       console.error('Get messages error:', err);
@@ -75,7 +82,47 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // 3. Gửi lời cảm ơn mới vào hòm thư (POST /api/inbox)
+  // 3. Lưu cấu hình thiệp rút gọn (POST /api/inbox?action=save_card)
+  if (req.method === 'POST' && action === 'save_card') {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    try {
+      let existingData = {};
+      const getRes = await fetch(`https://api.restful-api.dev/objects/${targetId}`);
+      if (getRes.ok) {
+        const json = await getRes.json();
+        if (json && json.data) existingData = json.data;
+      }
+
+      const updatedData = {
+        ...existingData,
+        to: body.to !== undefined ? body.to : (existingData.to || ''),
+        from: body.from !== undefined ? body.from : (existingData.from || ''),
+        customWish: body.customWish !== undefined ? body.customWish : (existingData.customWish || ''),
+        wishIdx: body.wishIdx !== undefined ? body.wishIdx : (existingData.wishIdx ?? 0),
+        messages: Array.isArray(existingData.messages) ? existingData.messages : []
+      };
+
+      const putRes = await fetch(`https://api.restful-api.dev/objects/${targetId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Hop Thu 20/10',
+          data: updatedData
+        })
+      });
+
+      if (!putRes.ok) {
+        throw new Error('Không thể lưu cấu hình thiệp');
+      }
+
+      return res.status(200).json({ success: true, id: targetId });
+    } catch (err) {
+      console.error('Save card error:', err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  // 4. Gửi lời cảm ơn mới vào hòm thư (POST /api/inbox)
   if (req.method === 'POST') {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const msg = body ? (body.message || body) : null;
